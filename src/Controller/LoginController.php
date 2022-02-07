@@ -27,16 +27,7 @@ class LoginController extends AbstractController
     {
         $this->em = $em;
     }
-
-    /**
-     * @Route("/", name="home")
-     */
-    public function home(): Response
-    {
-        return $this->render('home/index.html.twig', [
-            'controller_name' => 'LoginController',
-        ]);
-    }
+    
     /**
      * @Route("/register",name="register")
      */

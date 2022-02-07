@@ -1,17 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Hello HomeController!{% endblock %}
+
 {% block styles %}
-<link rel="stylesheet" href="{{ asset('css/register/formulario.css') }}">
+<link rel="stylesheet" href="{{ asset('css/nav/nav.css') }}">
 {% endblock %}
+ 
 {% block header %}
-    {{parent()}}
+   {{ include("componentes/nav.html.twig") }}
 {% endblock %}
+
+
 {% block body %}
 
-<h1>Estamos en home</h1>
-
+<div class="container">
+    <h1 class="h1 text-center mt-4"> Estamos en el home</h1>
+</div>
 
 {% endblock %}
-
-

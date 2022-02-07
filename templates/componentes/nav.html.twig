@@ -1,0 +1,16 @@
+<div class="nav">
+    <h1 class="logo">VereDeportes</h1>
+    <div class="menu">
+        <a href="{{ path('app_login') }}">Login</a>
+        <a href="{{ path('register') }}">Register</a>
+        {% if email %}
+
+            {% if admin %}
+                <span class="verde">{{email}}</span>
+            {% else %}
+                <span class="azul">{{email}}</span>
+            {% endif %}
+        <a href="{{ path('app_logout') }}">Log out</a>
+        {% endif %}
+    </div>
+</div>
