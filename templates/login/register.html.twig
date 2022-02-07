@@ -1,0 +1,18 @@
+{% extends '/login/index.html.twig' %}
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mt-5">Formulario de register</h1>
+    {{ form(formulario) }}
+    {% for message in app.flashes('exito') %}
+        <div class="alert alert-success">
+        {{ message }}
+        </div>
+    {% endfor %}
+      {% for message in app.flashes('error') %}
+        <div class="alert alert-warning">
+        {{ message }}
+        </div>
+    {% endfor %}
+    
+{% endblock %}
