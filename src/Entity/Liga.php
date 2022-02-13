@@ -34,10 +34,16 @@ class Liga
      */
     private $equipos;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Partido::class, mappedBy="id_liga")
+     */
+    private $partidos;
+
 
     public function __construct()
     {
         $this->equipos = new ArrayCollection();
+        $this->partidos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -89,6 +95,36 @@ class Liga
     public function removeEquipo(equipo $equipo): self
     {
         $this->equipos->removeElement($equipo);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Partido[]
+     */
+    public function getPartidos(): Collection
+    {
+        return $this->partidos;
+    }
+
+    public function addPartido(Partido $partido): self
+    {
+        if (!$this->partidos->contains($partido)) {
+            $this->partidos[] = $partido;
+            $partido->setIdLiga($this);
+        }
+
+        return $this;
+    }
+
+    public function removePartido(Partido $partido): self
+    {
+        if ($this->partidos->removeElement($partido)) {
+            // set the owning side to null (unless already changed)
+            if ($partido->getIdLiga() === $this) {
+                $partido->setIdLiga(null);
+            }
+        }
 
         return $this;
     }

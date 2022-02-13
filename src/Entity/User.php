@@ -52,9 +52,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $solicitas;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Reserva::class, mappedBy="id_usuario")
+     */
+    private $reservas;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Partido::class, mappedBy="id_profesor")
+     */
+    private $partidos;
+
     public function __construct()
     {
         $this->solicitas = new ArrayCollection();
+        $this->reservas = new ArrayCollection();
+        $this->partidos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -194,6 +206,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($solicita->getIdUsuario() === $this) {
                 $solicita->setIdUsuario(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Reserva[]
+     */
+    public function getReservas(): Collection
+    {
+        return $this->reservas;
+    }
+
+    public function addReserva(Reserva $reserva): self
+    {
+        if (!$this->reservas->contains($reserva)) {
+            $this->reservas[] = $reserva;
+            $reserva->setIdUsuario($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReserva(Reserva $reserva): self
+    {
+        if ($this->reservas->removeElement($reserva)) {
+            // set the owning side to null (unless already changed)
+            if ($reserva->getIdUsuario() === $this) {
+                $reserva->setIdUsuario(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Partido[]
+     */
+    public function getPartidos(): Collection
+    {
+        return $this->partidos;
+    }
+
+    public function addPartido(Partido $partido): self
+    {
+        if (!$this->partidos->contains($partido)) {
+            $this->partidos[] = $partido;
+            $partido->setIdProfesor($this);
+        }
+
+        return $this;
+    }
+
+    public function removePartido(Partido $partido): self
+    {
+        if ($this->partidos->removeElement($partido)) {
+            // set the owning side to null (unless already changed)
+            if ($partido->getIdProfesor() === $this) {
+                $partido->setIdProfesor(null);
             }
         }
 
