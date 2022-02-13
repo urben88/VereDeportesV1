@@ -34,9 +34,21 @@ class Equipo
      */
     private $solicitas;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Liga::class, mappedBy="equipos")
+     */
+    private $equipos;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Liga::class, mappedBy="equipos")
+     */
+    private $ligas;
+
     public function __construct()
     {
         $this->solicitas = new ArrayCollection();
+        $this->equipos = new ArrayCollection();
+        $this->ligas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,6 +105,60 @@ class Equipo
             if ($solicita->getIdEquipo() === $this) {
                 $solicita->setIdEquipo(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Liga[]
+     */
+    public function getEquipos(): Collection
+    {
+        return $this->equipos;
+    }
+
+    public function addEquipo(Liga $equipo): self
+    {
+        if (!$this->equipos->contains($equipo)) {
+            $this->equipos[] = $equipo;
+            $equipo->addEquipo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEquipo(Liga $equipo): self
+    {
+        if ($this->equipos->removeElement($equipo)) {
+            $equipo->removeEquipo($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Liga[]
+     */
+    public function getLigas(): Collection
+    {
+        return $this->ligas;
+    }
+
+    public function addLiga(Liga $liga): self
+    {
+        if (!$this->ligas->contains($liga)) {
+            $this->ligas[] = $liga;
+            $liga->addEquipo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLiga(Liga $liga): self
+    {
+        if ($this->ligas->removeElement($liga)) {
+            $liga->removeEquipo($this);
         }
 
         return $this;
