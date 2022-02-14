@@ -29,13 +29,13 @@ class Solicita
 
     /**
      * @ORM\ManyToOne(targetEntity=user::class, inversedBy="solicitas")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $id_usuario;
 
     /**
-     * @ORM\ManyToOne(targetEntity=equipo::class, inversedBy="solicitas")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Equipo::class, inversedBy="solicitas")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $id_equipo;
 
@@ -80,12 +80,12 @@ class Solicita
         return $this;
     }
 
-    public function getIdEquipo(): ?equipo
+    public function getIdEquipo(): ?Equipo
     {
         return $this->id_equipo;
     }
 
-    public function setIdEquipo(?equipo $id_equipo): self
+    public function setIdEquipo(?Equipo $id_equipo): self
     {
         $this->id_equipo = $id_equipo;
 

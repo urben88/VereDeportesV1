@@ -34,6 +34,11 @@ class Campo
      */
     private $reservas;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $deporte;
+
     public function __construct()
     {
         $this->partidos = new ArrayCollection();
@@ -113,6 +118,18 @@ class Campo
                 $reserva->setIdCampo(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDeporte(): ?string
+    {
+        return $this->deporte;
+    }
+
+    public function setDeporte(?string $deporte): self
+    {
+        $this->deporte = $deporte;
 
         return $this;
     }

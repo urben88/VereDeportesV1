@@ -44,6 +44,11 @@ class Equipo
      */
     private $ligas;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nombre;
+
     public function __construct()
     {
         $this->solicitas = new ArrayCollection();
@@ -160,6 +165,18 @@ class Equipo
         if ($this->ligas->removeElement($liga)) {
             $liga->removeEquipo($this);
         }
+
+        return $this;
+    }
+
+    public function getNombre(): ?string
+    {
+        return $this->nombre;
+    }
+
+    public function setNombre(string $nombre): self
+    {
+        $this->nombre = $nombre;
 
         return $this;
     }

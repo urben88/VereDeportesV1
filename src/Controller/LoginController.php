@@ -41,6 +41,7 @@ class LoginController extends AbstractController
                 $this->addFlash('error','Las constraseñas no son iguales');
             }else{
                 $user->setRoles(['ROLE_USER']);
+                $user->setCapitan(0);
                 $user->setPassword($passwordEncoder->encodePassword($user,$form['password']->getData()));
                 $this->em->persist($user);
                 $this->em->flush();

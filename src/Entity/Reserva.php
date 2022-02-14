@@ -17,10 +17,7 @@ class Reserva
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $id_profesor;
+   
 
     /**
      * @ORM\Column(type="datetime")
@@ -43,26 +40,20 @@ class Reserva
     private $id_usuario;
 
     /**
-     * @ORM\ManyToOne(targetEntity=campo::class, inversedBy="reservas")
+     * @ORM\ManyToOne(targetEntity=Campo::class, inversedBy="reservas")
      * @ORM\JoinColumn(nullable=false)
      */
     private $id_campo;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="reservas_profesor")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $id_profesor;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getIdProfesor(): ?int
-    {
-        return $this->id_profesor;
-    }
-
-    public function setIdProfesor(int $id_profesor): self
-    {
-        $this->id_profesor = $id_profesor;
-
-        return $this;
     }
 
     public function getFechaCreacion(): ?\DateTimeInterface
@@ -113,14 +104,26 @@ class Reserva
         return $this;
     }
 
-    public function getIdCampo(): ?campo
+    public function getIdCampo(): ?Campo
     {
         return $this->id_campo;
     }
 
-    public function setIdCampo(?campo $id_campo): self
+    public function setIdCampo(?Campo $id_campo): self
     {
         $this->id_campo = $id_campo;
+
+        return $this;
+    }
+
+    public function getIdProfesor(): ?user
+    {
+        return $this->id_profesor;
+    }
+
+    public function setIdProfesor(?user $id_profesor): self
+    {
+        $this->id_profesor = $id_profesor;
 
         return $this;
     }

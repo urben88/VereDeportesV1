@@ -2,37 +2,28 @@
 
 namespace App\Controller;
 
+use App\Service\NavService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
+    public $usuario;
+    public function __construct( NavService $nav)
+    {
+        $this->usuario = $nav->getDataNav();
+    }
     /**
      * @Route("/", name="home")
      */
     public function index(): Response
     {
-
-        $admin = false;
-        if($this->getUser()){
-            if($this->getUser()->getRoles()[0] == "ROLE_USER"){
-                $admin = false;
-            }else{
-                $admin = true;
-            }
-            return $this->render('home/index.html.twig', [
+        return $this->render('home/index.html.twig', [
                 'controller_name' => 'HomeController',
-                'email'=>$this->getUser()->getEmail(),
-                'admin'=>$admin
-            ]); 
-        }else{
-            return $this->render('home/index.html.twig', [
-                'controller_name' => 'HomeController',
-                'email' => false,
-                'admin'=>$admin
-            ]);
-        }
+                'email' =>$this->usuario['email'],
+                'admin'=>$this->usuario['admin']
+        ]);
        
     }
       /**

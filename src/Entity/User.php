@@ -62,11 +62,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $partidos;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Reserva::class, mappedBy="id_profesor")
+     */
+    private $reservas_profesor;
+
     public function __construct()
     {
         $this->solicitas = new ArrayCollection();
         $this->reservas = new ArrayCollection();
         $this->partidos = new ArrayCollection();
+        $this->reservas_profesor = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -266,6 +272,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($partido->getIdProfesor() === $this) {
                 $partido->setIdProfesor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Reserva[]
+     */
+    public function getReservasProfesor(): Collection
+    {
+        return $this->reservas_profesor;
+    }
+
+    public function addReservasProfesor(Reserva $reservasProfesor): self
+    {
+        if (!$this->reservas_profesor->contains($reservasProfesor)) {
+            $this->reservas_profesor[] = $reservasProfesor;
+            $reservasProfesor->setIdProfesor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservasProfesor(Reserva $reservasProfesor): self
+    {
+        if ($this->reservas_profesor->removeElement($reservasProfesor)) {
+            // set the owning side to null (unless already changed)
+            if ($reservasProfesor->getIdProfesor() === $this) {
+                $reservasProfesor->setIdProfesor(null);
             }
         }
 

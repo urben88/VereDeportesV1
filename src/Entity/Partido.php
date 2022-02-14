@@ -43,7 +43,7 @@ class Partido
     private $resul_equipo2;
 
     /**
-     * @ORM\ManyToOne(targetEntity=liga::class, inversedBy="partidos")
+     * @ORM\ManyToOne(targetEntity=Liga::class, inversedBy="partidos")
      * @ORM\JoinColumn(nullable=false)
      */
     private $id_liga;
@@ -125,12 +125,12 @@ class Partido
         return $this;
     }
 
-    public function getIdLiga(): ?liga
+    public function getIdLiga(): ?Liga
     {
         return $this->id_liga;
     }
 
-    public function setIdLiga(?liga $id_liga): self
+    public function setIdLiga(?Liga $id_liga): self
     {
         $this->id_liga = $id_liga;
 

@@ -1,0 +1,21 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Crear Campo{% endblock %}
+
+{% block styles %}
+{{ parent() }}
+{% endblock %}
+ 
+{% block header %}
+   {{ include("componentes/nav.html.twig") }}
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+    {{ form(formulario) }}
+</div>
+
+{% endblock %}
