@@ -35,7 +35,12 @@ class HomeController extends AbstractController
         if($user){
             $rol = $user->getRoles()[0];
             if($rol == "ROLE_USER"){
-                return $this->redirectToRoute('home');
+                if($user->getCapitan()){
+                    return $this->redirectToRoute('home');
+                }else{
+                    return $this->redirectToRoute('home');
+                }
+              
             }elseif($rol == "ROLE_ADMIN"){
                 return $this->redirectToRoute('home');
             }else{

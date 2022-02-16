@@ -14,7 +14,12 @@
 {% block body %}
 
 <div class="container">
-    
+    <h1 class="h1">Estas en solicitar</h1>
+    {{ include("user/equipoSolicitar.html.twig") }}
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+ <!-- <script src="{{ asset('js/user/solicitarEquipo.js') }}" type="text/javascript"></script> -->
 {% endblock %}

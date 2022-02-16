@@ -2,11 +2,31 @@ form{
     display: flex;
     justify-content: center;
     margin-top: 50px;
-    input{
+    input,select{
         width: 200px;
     }
+    
 }
-#user,#equipo{
+
+#reserva{
+    div{
+        display: flex;
+        margin-bottom: 10px;
+        justify-content: flex-end;
+        label{
+            margin-right: 20px;
+        }
+        button{
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px;
+        }
+    }
+
+}
+
+#equipo{
     div{
         display: flex;
         margin-bottom: 10px;

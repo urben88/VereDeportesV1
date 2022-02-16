@@ -19,6 +19,7 @@ use App\Service\FechasService;
 
 //Entidades
 use App\Entity\User;
+use App\Repository\EquipoRepository;
 
 /**
  * @Route("/equipo")
@@ -50,27 +51,34 @@ class EquipoController extends AbstractController
             $equipo->setDeporte($form['deporte']->getData());
             $capitan = $form['capitan']->getData();
             $capitan->setCapitan(true);
+
             $solicitud->setIdUsuario($capitan);
             $solicitud->setAceptado(1);
             $solicitud->setFechaSolicitud($this->_fechas->getAct());
 
             $this->em->persist($equipo);
-            $this->em->persist($capitan);
+          
             $this->em->flush();
 
             $solicitud->setIdEquipo($equipo);
+            $capitan->setEquipo($equipo);
             $this->em->persist($solicitud);
+            $this->em->persist($capitan);
             $this->em->flush();
 
 
 
 
         }
-            return $this->render('equipo/create.html.twig', [
+        $repositorioEquipo = $this->em->getRepository(Equipo::class);
+        $equipos = $repositorioEquipo->findAll();
+            
+        return $this->render('equipo/create.html.twig', [
                 'controller_name' => 'HomeController',
                 'email'=>$this->usuario['email'],
                 'admin'=>$this->usuario['admin'],
-                'formulario'=>$form->createView()
+                'formulario'=>$form->createView(),
+                'equipos'=>$equipos
             ]); 
        
     }

@@ -67,6 +67,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $reservas_profesor;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Equipo::class, inversedBy="jugadores")
+     */
+    private $equipo;
+
     public function __construct()
     {
         $this->solicitas = new ArrayCollection();
@@ -304,6 +309,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $reservasProfesor->setIdProfesor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEquipo(): ?Equipo
+    {
+        return $this->equipo;
+    }
+
+    public function setEquipo(?Equipo $equipo): self
+    {
+        $this->equipo = $equipo;
 
         return $this;
     }

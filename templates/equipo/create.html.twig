@@ -5,6 +5,7 @@
 
 {% block styles %}
 {{ parent() }}
+<link rel="stylesheet" href="{{ asset('css/formularios/base.css') }}">
 {% endblock %}
  
 {% block header %}
@@ -16,6 +17,11 @@
 
 <div class="container">
     {{ form(formulario) }}
+
+    <div class="equipos">
+        {{ include("equipo/tablaEquipos.html.twig", equipos) }}
+    </div>
+
 </div>
 
 {% endblock %}

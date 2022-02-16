@@ -1,0 +1,23 @@
+<table class="table table-dark">
+    <tr>
+        <th>Nombre</th>
+        <th>Deporte</th>
+        <th>Capitan</th>
+        <th>Id</th>
+    </tr>
+    {% for equipo in equipos %}
+     
+    <tr>
+        <td>{{ equipo.nombre }}</td>
+        <td>{{ equipo.deporte | upper }}</td>
+        <td>
+        {% for jugador in equipo.jugadores  %}
+            {% if jugador.capitan == true %}
+             {{ jugador.nombre }}
+            {% endif %}
+        {% endfor %} 
+        </td>
+        <td>{{ equipo.id }}</td>
+    </tr>
+    {% endfor %}
+</table>

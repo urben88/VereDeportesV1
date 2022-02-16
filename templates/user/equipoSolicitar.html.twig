@@ -1,0 +1,53 @@
+<div class="solicitarContainer">
+   {% for equipo in equipos %}
+       <div class="card my-4">
+                <h5 class="card-header">{{ equipo.nombre }}</h5>
+                <div class="card-body">
+                  <h5 class="card-title">Deporte: {{ equipo.deporte }}</h5>
+                  <p class="card-text">Capitan del equipo es: 
+                    {% for jugador in equipo.jugadores %}
+                        {% if jugador.capitan %}
+                            {{ jugador.nombre }}
+                        {% endif %}
+                    {% endfor %}
+                  </p>
+                  <a onclick="solicitar(event)" value="{{ equipo.id }}" class="btn btn-primary">Solicitar</a>
+                   <a onclick="cancelar(event)" value="{{ equipo.id }}" class="btn btn-danger">Cancelar</a>
+                </div>
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+
+  function solicitar(e){
+    let id = e.target.getAttribute('value');
+  //   $.ajax({
+  //     type: "post",
+  //     url: "http://127.0.0.1:8000/user/solicitar/equipo",
+  //     data: {
+  //         "id":id,
+  //         "nombre":"ruben"
+  //     },
+  //     dataType: "json",
+  //     success: function (data) {
+  //       console.log(data)
+  //     },
+  //     error: function (jqXHR,estado,error) { 
+  //       console.log(estado);
+  //       console.log(error)
+  //     }
+  //   });
+
+  window.location.href = "http://127.0.0.1:8000/user/solicitar/equipo/"+id;
+
+  }
+
+  function cancelar(e){
+    let id = e.target.getAttribute('value');
+    window.location.href = "http://127.0.0.1:8000/user/solicitar/equiporemove/"+id;
+  }
+
+ 
+
+</script>

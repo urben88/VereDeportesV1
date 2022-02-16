@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Crear Campo{% endblock %}
+
+{% block styles %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('css/formularios/reserva/form.css') }}">
+
+{% endblock %}
+ 
+{% block header %}
+   {{ include("componentes/nav.html.twig") }}
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+    <h1 class="h1 text-center mt-4">Estas en Crear reserva</h1>
+    {{ form(formulario) }}
+    
+    <div class="reservas">
+        <h1 class="alert-info alert h3">No hay reservas :(</h1>
+    </div>
+    <div class="campos d-flex flex-row gap-3">
+        {% for campo in campos %}
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="{{ asset("img/"~ campo.deporte ~".jpg")}}" alt="Card image cap">
+                    <div class="card-body">
+                        <p class="card-text">{{ campo.nombre }}</p>
+                    </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+ <!-- <script src="{{ asset('js/user/solicitarEquipo.js') }}" type="text/javascript"></script> -->
+{% endblock %}

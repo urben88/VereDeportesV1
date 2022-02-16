@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Aceptar Solicitud{% endblock %}
+
+{% block styles %}
+{{ parent() }}
+{% endblock %}
+ 
+{% block header %}
+   {{ include("componentes/nav.html.twig") }}
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+    <h1 class="h1">Estas en aceptar solicitud</h1>
+    <table class="table table-dark">
+        <thead>
+             <tr>
+                <th>Jugador</th>
+                <th>Fecha solicitud</th>
+                <th>Aceptar solicitud</th>
+                <th>Rechazar</th>
+            </tr>
+        </thead>
+       <tbody>
+       {% for solicitud in solicitudes %}
+        {% if solicitud.aceptado == 0 %}
+          <tr>
+              <td>{{ solicitud.getIdUsuario().nombre}}</td>
+              <td>{{ solicitud.getFechaSolicitud().format('Y-m-d H:i:s') }}</td>
+              <td> <button onclick="aceptar(event)" value="{{ solicitud.id }}" class="btn btn-info">Aceptar</button> </td>
+              <td> <button onclick="rechazar(event)" value="{{ solicitud.id }}" class="btn btn-danger">Rechazar</button> </td>
+           </tr>
+        {% endif %}
+       {% endfor %}
+       </tbody>
+    </table>
+    {% for message in app.flashes('exito') %}
+      <div class="alert alert-success">
+         {{ message }}
+      </div>
+    {% endfor%}
+
+    {% for message in app.flashes('rechazado') %}
+       <div class="alert alert-danger">
+         {{ message }}
+       </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+   <script> 
+   function aceptar(e){
+      let id = e.target.getAttribute('value');
+      window.location.href = "http://127.0.0.1:8000/user/aceptSolicitud/"+id;
+   }
+   
+   function rechazar(e){
+      let id = e.target.getAttribute('value');
+      window.location.href = "http://127.0.0.1:8000/user/removeSolicitud/"+id;
+   }
+
+   
+   </script>
+{% endblock %}
