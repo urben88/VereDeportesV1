@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Crear Campo{% endblock %}
+{% block title %}Crear Reserva{% endblock %}
 
 {% block styles %}
 {{ parent() }}
@@ -18,20 +18,31 @@
 <div class="container">
     <h1 class="h1 text-center mt-4">Estas en Crear reserva</h1>
     {{ form(formulario) }}
-    
-    <div class="reservas">
-        <h1 class="alert-info alert h3">No hay reservas :(</h1>
-    </div>
+    {% for message in app.flashes('error') %}
+       <div class="alert-danger alert">* {{ message }}</div>
+    {% endfor %} 
     <div class="campos d-flex flex-row gap-3">
+    {# <h1>Campos:</h1> #}
         {% for campo in campos %}
-            <div class="card" style="width: 18rem;">
+        {% if campo.deporte == app.user.equipo.deporte %}
+         <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="{{ asset("img/"~ campo.deporte ~".jpg")}}" alt="Card image cap">
                     <div class="card-body">
                         <p class="card-text">{{ campo.nombre }}</p>
                     </div>
             </div>
+        {% endif %}
+        
         {% endfor %}
     </div>
+
+    {{ include("reserva/show.html.twig") }}
+    
+    {% for admi in admin %}
+        {{ admi.nombre}}
+    {% endfor %}
+  
+    
     
 </div>
 

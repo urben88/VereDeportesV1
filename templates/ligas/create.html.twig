@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Crear Liga{% endblock %}
+
+{% block styles %}
+
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('css/formularios/liga/form.css') }}">
+{% endblock %}
+ 
+{% block header %}
+   {{ include("componentes/nav.html.twig") }}
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+    <h1 class="h1 text-center mt-4">Estas en Crear Liga</h1>
+    {{ form(formulario) }}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">* {{ message }}</div>
+    {% endfor %}
+
+    <table class="table table-dark">
+        <legend>Ligas</legend>
+        <thead>
+            <th>Nombre de la liga</th>
+            <th>Deporte</th>
+            <th>Equipos que han solicitado</th>
+            <th>Dia de la liga</th>
+            <th>Termina la liga</th>
+            <th class="text-center">Comenzar la nueva liga</th>
+        </thead>
+        <tbody>
+            {% for liga in ligas %}
+            <tr>
+                <td class="text-warning">{{liga.nombreLiga}}</td>
+                <td>{{liga.deporte | upper}}</td>
+                <td style="overflow: scroll; overflow-x:hidden; height: 100px">
+                    {% for equipo in liga.getEquipos() %}
+                        <span class="badge badge-pill badge-primary" style="background-color:orange; color:black" value="{{ equipo.id }}">{{ equipo.nombre}}</span>
+                    {% endfor %}
+                </td>
+                <td style="width: 150px">{{ liga.fecha.format('Y-m-d') }}</td>
+                {% if liga.getFechaTermina() == null %}
+                <td style="width: 150px">No generada</td>
+                {% else %}
+                <td style="width: 150px">{{ liga.getFechaTermina().format('Y-m-d') }}</td>
+                {% endif %}
+                
+                {% if liga.status == 0 %}
+                <td class="h-100"><button class="btn btn-primary" value="{{ liga.id }}" onclick="comenzar(event)">Comenzar</button></td>
+                {% else %}
+                <td class="fw-bold" style="color: rgb(21, 252, 0)">Ya esta en marcha</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div id="errores">
+
+    </div>
+  
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+ <script>
+     function comenzar(e){
+         console.log('hola');
+        var id = e.target.getAttribute('value');
+        window.location.href = 'http://127.0.0.1:8000/ligas/startLiga/'+id;
+     }
+     
+
+ </script>
+{% endblock %}

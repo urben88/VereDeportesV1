@@ -17,8 +17,18 @@ class EquipoRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Equipo::class);
+        
     }
 
+    public function existName($nombre){
+        $equipos = $this->_em->getRepository(Equipo::class)->findAll();
+        foreach ($equipos as $equipo) {
+            if($equipo->getNombre() == $nombre){
+                return true;
+            }
+        }
+        return false;
+    }
     // /**
     //  * @return Equipo[] Returns an array of Equipo objects
     //  */

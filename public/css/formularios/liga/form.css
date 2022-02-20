@@ -1,0 +1,50 @@
+form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-top: 50px;
+}
+
+form input, form select {
+  width: 200px;
+}
+
+#liga {
+  width: 100% !important;
+}
+
+#liga div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 10px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#liga div label {
+  margin-right: 20px;
+}
+
+#liga div button {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-left: 200px;
+}
+
+#liga_deporte {
+  margin: 0px 10px;
+  padding: 5px;
+  border: none;
+}
+
+.des {
+  display: none;
+}
+/*# sourceMappingURL=form.css.map */

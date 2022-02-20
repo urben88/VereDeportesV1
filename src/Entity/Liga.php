@@ -30,7 +30,7 @@ class Liga
     private $nombre_liga;
 
     /**
-     * @ORM\ManyToMany(targetEntity=equipo::class, inversedBy="ligas")
+     * @ORM\ManyToMany(targetEntity=Equipo::class, inversedBy="ligas")
      */
     private $equipos;
 
@@ -38,6 +38,26 @@ class Liga
      * @ORM\OneToMany(targetEntity=Partido::class, mappedBy="id_liga")
      */
     private $partidos;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $fecha_creacion;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $fecha;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $fecha_termina;
 
 
     public function __construct()
@@ -125,6 +145,54 @@ class Liga
                 $partido->setIdLiga(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getFechaCreacion(): ?\DateTimeInterface
+    {
+        return $this->fecha_creacion;
+    }
+
+    public function setFechaCreacion(\DateTimeInterface $fecha_creacion): self
+    {
+        $this->fecha_creacion = $fecha_creacion;
+
+        return $this;
+    }
+
+    public function getFecha(): ?\DateTimeInterface
+    {
+        return $this->fecha;
+    }
+
+    public function setFecha(\DateTimeInterface $fecha): self
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    public function getFechaTermina(): ?\DateTimeInterface
+    {
+        return $this->fecha_termina;
+    }
+
+    public function setFechaTermina(?\DateTimeInterface $fecha_termina): self
+    {
+        $this->fecha_termina = $fecha_termina;
 
         return $this;
     }

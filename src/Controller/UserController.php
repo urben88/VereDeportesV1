@@ -92,14 +92,15 @@ class UserController extends AbstractController
     public function aceptarSolicitud(){
         $user = $this->getUser();
         $equipo = $user->getEquipo();
-        $solicitudes = $equipo->getSolicitas();
+        $solicitudes = $this->em->getRepository(Solicita::class)->findBy(['id_equipo'=>$equipo->getId(),'aceptado'=>'0']);
 
 
         return $this->render('user/controlSolicitud.html.twig',[
             'email'=>$this->nav->getDataNav()['email'],
             'admin'=>$this->nav->getDataNav()['admin'],
             'user'=>$this->getUser(),
-            'solicitudes'=>$solicitudes
+            'solicitudes'=>$solicitudes,
+            'equipo'=>$equipo
         ]);
     }
       /**
@@ -127,6 +128,8 @@ class UserController extends AbstractController
         $this->addFlash('exito','Se ha aceptado la solicitud');
         return $this->redirectToRoute('controlSolicitud');
     }
+
+   
 
 
 

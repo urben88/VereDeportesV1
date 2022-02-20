@@ -35,7 +35,7 @@ class Reserva
     private $fecha_caduca;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="reservas")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservas")
      */
     private $id_usuario;
 
@@ -46,7 +46,7 @@ class Reserva
     private $id_campo;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="reservas_profesor")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservas_profesor")
      * @ORM\JoinColumn(nullable=false)
      */
     private $id_profesor;
@@ -92,12 +92,12 @@ class Reserva
         return $this;
     }
 
-    public function getIdUsuario(): ?user
+    public function getIdUsuario(): ?User
     {
         return $this->id_usuario;
     }
 
-    public function setIdUsuario(?user $id_usuario): self
+    public function setIdUsuario(?User $id_usuario): self
     {
         $this->id_usuario = $id_usuario;
 
@@ -116,12 +116,12 @@ class Reserva
         return $this;
     }
 
-    public function getIdProfesor(): ?user
+    public function getIdProfesor(): ?User
     {
         return $this->id_profesor;
     }
 
-    public function setIdProfesor(?user $id_profesor): self
+    public function setIdProfesor(?User $id_profesor): self
     {
         $this->id_profesor = $id_profesor;
 

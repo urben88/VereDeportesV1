@@ -36,6 +36,30 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function getAdminRand(){
+        $admins = $this->_em->createQueryBuilder()
+        ->select('u')
+        ->from(User::class,'u')
+        ->where('u.roles LIKE :role')
+        ->setParameter('role', '%ADMIN%')
+        ->getQuery()
+        ->getResult();
+        $total = count($admins);
+        $rand = rand(0,$total-1);
+        return $admins[$rand];
+
+    }
+
+    public function getAdmins(){
+        return $admins = $this->_em->createQueryBuilder()
+        ->select('u')
+        ->from(User::class,'u')
+        ->where('u.roles LIKE :role')
+        ->setParameter('role', '%ADMIN%')
+        ->getQuery()
+        ->getResult();
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

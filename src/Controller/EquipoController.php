@@ -46,7 +46,9 @@ class EquipoController extends AbstractController
         $solicitud = new Solicita;
         $form = $this->createForm(EquipoType::class,$equipo);
         $form->handleRequest($request);
+        
         if($form->isSubmitted() && $form->isValid()){
+            if(!$this->em->getRepository(Equipo::class)->existName($form['nombre']->getData())){
             $equipo->setCapitan(true);
             $equipo->setDeporte($form['deporte']->getData());
             $capitan = $form['capitan']->getData();
@@ -65,7 +67,9 @@ class EquipoController extends AbstractController
             $this->em->persist($solicitud);
             $this->em->persist($capitan);
             $this->em->flush();
-
+            }else{
+                $this->addFlash('error',"El nombre ya exite");
+            }
 
 
 

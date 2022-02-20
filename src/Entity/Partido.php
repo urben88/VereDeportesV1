@@ -55,7 +55,7 @@ class Partido
     private $id_profesor;
 
     /**
-     * @ORM\ManyToOne(targetEntity=campo::class, inversedBy="partidos")
+     * @ORM\ManyToOne(targetEntity=Campo::class, inversedBy="partidos")
      * @ORM\JoinColumn(nullable=false)
      */
     private $id_campo;

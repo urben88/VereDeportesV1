@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Crear Liga{% endblock %}
+
+{% block styles %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('css/formularios/liga/form.css') }}">
+
+{% endblock %}
+ 
+{% block header %}
+   {{ include("componentes/nav.html.twig") }}
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+    <h1 class="h1 text-center mt-4">Estas en Ver Liga</h1>
+
+    <table class="table table-dark">
+        <legend>Ligas</legend>
+        <thead>
+            <th>Nombre de la liga</th>
+            <th>Deporte</th>
+            <th>Equipos que participan</th>
+        </thead>
+        <tbody>
+            {% for liga in ligas %}
+            {% if liga.status %}
+            <tr>
+                <td>{{liga.nombreLiga}}</td>
+                <td>{{liga.deporte | upper}}</td>
+                 <td style="overflow: scroll; overflow-x:hidden; height: 100px">
+                    {% for equipo in liga.getEquipos() %}
+                        <span class="badge badge-pill badge-primary" style="background-color:orange; color:black" value="{{ equipo.id }}">{{ equipo.nombre}}</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endif %}
+           
+            {% endfor %}
+        </tbody>
+    </table>
+  
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+ <script>
+     function comenzar(){
+        $.post("http://127.0.0.1:8000/ligas/startLiga", data,
+            function (data, textStatus, jqXHR) {
+                console.log(data);
+            },
+        );
+     }
+     
+
+ </script>
+{% endblock %}

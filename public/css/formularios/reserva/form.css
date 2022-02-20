@@ -55,4 +55,10 @@ form input, form select {
   padding: 5px;
   border: none;
 }
+
+#reserva_campos {
+  margin: 0px 10px;
+  padding: 5px;
+  border: none;
+}
 /*# sourceMappingURL=form.css.map */

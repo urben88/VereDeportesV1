@@ -6,7 +6,6 @@ use App\Repository\EquipoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
 /**
  * @ORM\Entity(repositoryClass=EquipoRepository::class)
  */
@@ -50,7 +49,7 @@ class Equipo
     private $nombre;
 
     /**
-     * @ORM\OneToMany(targetEntity=user::class, mappedBy="equipo")
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="equipo")
      */
     private $jugadores;
 

@@ -11,8 +11,14 @@
                         {% endif %}
                     {% endfor %}
                   </p>
+                  {% for solicita in app.user.solicitas %}
+                    {% if solicita.getIdEquipo() == equipo %}
+                     <a onclick="cancelar(event)" value="{{ equipo.id }}" class="btn btn-danger">Cancelar</a>
+                    {% endif %}
+                  {% endfor %}
                   <a onclick="solicitar(event)" value="{{ equipo.id }}" class="btn btn-primary">Solicitar</a>
-                   <a onclick="cancelar(event)" value="{{ equipo.id }}" class="btn btn-danger">Cancelar</a>
+
+                  
                 </div>
         </div>
     {% endfor %}

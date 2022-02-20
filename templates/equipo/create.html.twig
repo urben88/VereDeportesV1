@@ -17,7 +17,10 @@
 
 <div class="container">
     {{ form(formulario) }}
-
+    {% for message in app.flashes('error') %}
+    <div class="alert alert-danger">* {{message}}</div>
+        
+    {% endfor %}
     <div class="equipos">
         {{ include("equipo/tablaEquipos.html.twig", equipos) }}
     </div>
