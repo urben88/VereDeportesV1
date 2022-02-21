@@ -13,13 +13,15 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Security as CoreSecutity;
 class ReservaType extends AbstractType
 {
     public $security;
-    public function cosntruct(Security $security){
+
+    public function __construct(CoreSecutity $security){
         $this->security = $security;
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -30,7 +32,8 @@ class ReservaType extends AbstractType
                     'hour' => 'Hora', 'minute' => 'Minuto'
                 ],
                 'hours'=>[16,17,18,19,20,21,22],
-                'years'=>[2022,2023,2024,2025]
+                'years'=>[2022,2023,2024,2025],
+                'minutes'=>[0,30]
                 
             ])
             ->add('campos',EntityType::class,[
@@ -38,6 +41,11 @@ class ReservaType extends AbstractType
                 'choice_label'=>"nombre",
                 "mapped"=>false,
                 "label"=>"Campos disponibles:",
+                "query_builder" => function(CampoRepository $campo){
+                    return $campo->createQueryBuilder('c')
+                    ->where('c.deporte = :tipo')
+                    ->setParameter('tipo',$this->security->getUser()->getEquipo()->getDeporte());
+                }
 
             ])
             ->add('save', SubmitType::class,[

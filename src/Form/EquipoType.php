@@ -30,9 +30,10 @@ class EquipoType extends AbstractType
                 'class' => User::class,
                 'query_builder' => function (UserRepository $em){
                     return $em->createQueryBuilder('u')
-                    ->where('u.capitan = :capitan')
+                    ->where('u.capitan = :capitan and u.equipo is null')
                     ->setParameter(':capitan', false);
                 },
+                'placeholder'=>"Jugador sin equipo",
                 'choice_label' => 'email',
                 'mapped'=>false
 

@@ -37,37 +37,49 @@ class ReservaController extends AbstractController
         $user = $this->getUser();
         $campos = $this->em->getRepository(Campo::class)->findAll();
         $reservas = $this->em->getRepository(Reserva::class)->findBy(['id_usuario'=>$user->getId()]);
-
         $reserva = new Reserva();
         $form = $this->createForm(ReservaType::class,$reserva);
         $form->handleRequest($request);
+
+        $resevasSemana = 0;
+      
         if($form->isSubmitted() && $form->isValid()){
+            // //? Saber si hay 3 reservas esa semana
+             foreach ($reservas as $reservaext) {
+                 if($reservaext->getFecha()->format("W") == $form['fecha']->getData()->format("W")){
+                   $resevasSemana++;
+                  }
+              }
+
             if($form['campos']->getData()->getDeporte() == $user->getEquipo()->getDeporte()){
-                if(count($reservas) == 3){
-                    $this->addFlash('error',"No puedes tener mas de 3 reservas");
+                if($resevasSemana == 3){
+                    $this->addFlash('error',"No puedes tener mas de 3 reservas en una semana");
                 }else{
-
                     $fecha = $form['fecha']->getData();
-                    $fechacaduca = $this->_fecha->add90($fecha);
-                    if($this->em->getRepository(Reserva::class)->isValida($fecha,$fechacaduca,$form['campos']->getData())){
+                    if($this->_fecha->isAct($fecha)){
+                        $fechacaduca = $this->_fecha->add90($fecha);
+                        if($this->em->getRepository(Reserva::class)->isValida($fecha,$fechacaduca,$form['campos']->getData())){
 
-                        $fechacreacion = new \DateTime('now');
-                        $campo = $form['campos']->getData();
-                        $admin = $this->em->getRepository(User::class)->getAdminRand();
-                        if($this->_fecha->isSemana($fecha)){
-                            $reserva->setIdUsuario($user);
-                            $reserva->setIdCampo($campo);
-                            $reserva->setIdProfesor($admin);
-                            $reserva->setFechaCaduca($fechacaduca);
-                            $reserva->setFechaCreacion($fechacreacion);
-                            $this->em->persist($reserva);
-                            $this->em->flush();
+                            $fechacreacion = new \DateTime('now');
+                            $campo = $form['campos']->getData();
+                            $admin = $this->em->getRepository(User::class)->getAdminRand();
+                            if($this->_fecha->isSemana($fecha)){
+                                $reserva->setIdUsuario($user);
+                                $reserva->setIdCampo($campo);
+                                $reserva->setIdProfesor($admin);
+                                $reserva->setFechaCaduca($fechacaduca);
+                                $reserva->setFechaCreacion($fechacreacion);
+                                $this->em->persist($reserva);
+                                $this->em->flush();
 
+                            }else{
+                                $this->addFlash('error',"No puedes crear una reserva un fin de semana");
+                            }
                         }else{
-                            $this->addFlash('error',"No puedes crear una reserva un fin de semana");
+                                $this->addFlash('error',"Ya existe una reserva para esa hora y campo");
                         }
                     }else{
-                            $this->addFlash('error',"Ya existe una reserva para esa hora y campo");
+                        $this->addFlash('error',"No puedes hacer una reserva en el pasado");
                     }
                 }
             }else{
@@ -83,6 +95,7 @@ class ReservaController extends AbstractController
             'formulario'=>$form->createView(),
             'campos'=> $campos,
             'reservas'=>$reservas,
+            '_fecha'=>$this->_fecha
             // 'fecha' => $fecha->format('Y-m-d H:i:s')
         ]);
     }
@@ -127,6 +140,27 @@ class ReservaController extends AbstractController
         $this->em->persist($reserva);
         $this->em->flush();
         return $this->redirectToRoute('adminReserva');
+    }
+
+    /**
+     * @Route("/showReservasEquipo",name="showReservasEquipo")
+     */
+    public function showReservasEquipo(){
+      
+        $user = $this->getUser();
+        $equipo = $user->getEquipo();
+        $capitan = $this->em->getRepository(User::class)->findOneBy(['capitan'=>1,'equipo'=>$equipo->getId()]);
+        $reservas = $this->em->getRepository(Reserva::class)->findBy(['id_usuario'=>$capitan->getId()]);
+    
+        return $this->render('reserva/showJugador.html.twig', [
+            'controller_name' => 'ReservaController',
+            'email'=>$this->nav->getDataNav()['email'],
+            'admin'=>$this->nav->getDataNav()['admin'],
+            'reservas'=>$reservas,
+            "_fecha"=>$this->_fecha
+            // 'fecha' => $fecha->format('Y-m-d H:i:s')
+        ]);
+
     }
 
 }

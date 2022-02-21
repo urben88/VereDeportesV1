@@ -60,6 +60,11 @@ class Partido
      */
     private $id_campo;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $fecha_acaba;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -157,6 +162,18 @@ class Partido
     public function setIdCampo(?campo $id_campo): self
     {
         $this->id_campo = $id_campo;
+
+        return $this;
+    }
+
+    public function getFechaAcaba(): ?\DateTimeInterface
+    {
+        return $this->fecha_acaba;
+    }
+
+    public function setFechaAcaba(\DateTimeInterface $fecha_acaba): self
+    {
+        $this->fecha_acaba = $fecha_acaba;
 
         return $this;
     }

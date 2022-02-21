@@ -6,6 +6,7 @@
     {{ form(formulario) }}
     <div class="text-center mt-2">
         <a href="{{ path('app_login') }}" class="text-center">Ya tienes cuenta?</a>
+        <a href="{{ path('home') }}" class="ms-3 mt-4">Ir home</a>
     </div>
     
     {% for message in app.flashes('exito') %}

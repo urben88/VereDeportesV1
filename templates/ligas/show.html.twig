@@ -31,7 +31,7 @@
             <tr>
                 <td>{{liga.nombreLiga}}</td>
                 <td>{{liga.deporte | upper}}</td>
-                 <td style="overflow: scroll; overflow-x:hidden; height: 100px">
+                 <td style="overflow: scroll; overflow-x:hidden; height: 100px">                            
                     {% for equipo in liga.getEquipos() %}
                         <span class="badge badge-pill badge-primary" style="background-color:orange; color:black" value="{{ equipo.id }}">{{ equipo.nombre}}</span>
                     {% endfor %}
@@ -42,6 +42,9 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if ligasact|length == 0 %}
+    <div class="alert alert-primary">No hay ligas activas :(</div>
+    {% endif %}
   
 </div>
 

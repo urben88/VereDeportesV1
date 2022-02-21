@@ -12,6 +12,16 @@
   color: white;
 }
 
+.nav .logo h1 a {
+  text-decoration: none;
+  color: white;
+}
+
+.nav .logo h1 a:link {
+  text-decoration: none;
+  color: white;
+}
+
 .nav .menu {
   display: -webkit-box;
   display: -ms-flexbox;

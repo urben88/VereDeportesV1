@@ -47,4 +47,9 @@ form input, form select {
 .des {
   display: none;
 }
+
+#liga_fecha_time_hour {
+  display: none !important;
+  color: white;
+}
 /*# sourceMappingURL=form.css.map */

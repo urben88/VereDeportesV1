@@ -1,5 +1,5 @@
 <div class="nav">
-    <h1 class="logo">VereDeportes</h1>
+    <h1 class="logo"><a style="text-decoration:none; color: white" href="{{ path('home') }}">VereDeportes</a></h1>
     <div class="menu">
         <a href="{{ path('app_login') }}">Login</a>
         <a href="{{ path('register') }}">Register</a>
@@ -21,16 +21,23 @@
         {% if app.user.roles[0] == "ROLE_ADMIN" %}
         <a href="{{ path('adminReserva') }}">Vigilancia</a>
         <a href="{{ path('createLiga') }}">Crear Liga</a>
-        <a href="{{ path('equipo') }}">Crear Equipo</a>
+        <a href="{{ path('equipo') }}">Ver/Crear Equipo</a>
         <a href="{{ path('showLiga') }}">Ver Ligas</a>
         {% endif %} 
 
         {% if app.user.roles[0] == "ROLE_USER" and app.user.capitan == 0 %}
-        <a href="{{ path('solicitar') }}">Entrar a Equipo</a>
+        {% if app.user.equipo != null %}
+            <a href="{{ path('showEquipo') }}">Ver mi  equipo</a>
+            <a href="{{ path('showReservasEquipo') }}">Ver Reservas</a>
+        {% else %}
+            <a href="{{ path('solicitar') }}">Entrar a Equipo</a>
+        {% endif %}
+        <a href="{{ path('showEquipos') }}">Ver Equipos</a>
         <a href="{{ path('showLiga') }}">Ver Ligas</a>
         {% endif %} 
 
         {% if app.user.roles[0] == "ROLE_USER" and app.user.capitan == 1 %}
+        <a href="{{ path('showEquipo') }}">Ver mi equipo</a>
         <a href="{{ path('createReserva') }}">Hacer Reserva</a>
         <a href="{{ path('solicitarLiga') }}">Solicitar Liga</a>
         <a href="{{ path('controlSolicitud') }}">Control Equipo</a>

@@ -19,6 +19,14 @@ class CampoRepository extends ServiceEntityRepository
         parent::__construct($registry, Campo::class);
     }
 
+    public function getCampoRand($deporte){
+        $campos = $this->_em->getRepository(Campo::class)->findBy(['deporte'=>$deporte]);
+        $total = count($campos);
+        $rand = rand(0,$total-1);
+        return  $campos[$rand];
+
+    }
+
     // /**
     //  * @return Campo[] Returns an array of Campo objects
     //  */

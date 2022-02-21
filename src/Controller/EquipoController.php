@@ -53,6 +53,13 @@ class EquipoController extends AbstractController
             $equipo->setDeporte($form['deporte']->getData());
             $capitan = $form['capitan']->getData();
             $capitan->setCapitan(true);
+            $solicitudesCapi = $this->em->getRepository(Solicita::class)->findBy(['id_usuario'=>$capitan->getId()]);
+            if(count($solicitudesCapi)!= 0){
+                foreach ($solicitudesCapi as $solicitudd) {
+                    $this->em->remove($solicitudd);
+                    $this->em->flush();
+                }
+            }
 
             $solicitud->setIdUsuario($capitan);
             $solicitud->setAceptado(1);
@@ -85,5 +92,54 @@ class EquipoController extends AbstractController
                 'equipos'=>$equipos
             ]); 
        
+    }
+    /**
+     * @Route("/showEquipo",name="showEquipo")
+     */
+    public function verEquipo(){
+
+        $equipo = $this->getUser()->getEquipo();
+        $capitan = $this->em->getRepository(User::class)->findOneBy(['capitan'=>"1",'equipo'=>$this->getUser()->getEquipo()->getId()]);
+        return $this->render('equipo/show.html.twig', [
+            'controller_name' => 'HomeController',
+            'email'=>$this->usuario['email'],
+            'admin'=>$this->usuario['admin'],
+            'equipo'=> $equipo,
+            'capitan'=>$capitan
+        ]); 
+    }
+
+    /**
+     * @Route("/showEquipo/{id}",name="showEquipoId")
+     */
+    public function showEquipoId($id){
+
+        $equipo = $this->em->getRepository(Equipo::class)->find($id);
+        $capitan = $this->em->getRepository(User::class)->findOneBy(['capitan'=>"1",'equipo'=>$equipo->getId()]);
+        return $this->render('equipo/showId.html.twig', [
+            'controller_name' => 'HomeController',
+            'email'=>$this->usuario['email'],
+            'admin'=>$this->usuario['admin'],
+            'equipo'=> $equipo,
+            'capitan'=>$capitan
+        ]); 
+    }
+
+
+    /**
+     * @Route("/showEquipos",name="showEquipos")
+     */
+    public function showEquipos(){
+
+        $equipos = $this->em->getRepository(Equipo::class)->findAll();
+        // $capitan = $this->em->getRepository(User::class)->findOneBy(['capitan'=>"1",'equipo'=>$equipo->getId()]);
+        
+        return $this->render('equipo/showEquipos.html.twig', [
+            'controller_name' => 'HomeController',
+            'email'=>$this->usuario['email'],
+            'admin'=>$this->usuario['admin'],
+            'equipos'=> $equipos,
+            // 'capitan'=>$capitan
+        ]); 
     }
 }

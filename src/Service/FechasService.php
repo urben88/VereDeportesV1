@@ -39,6 +39,16 @@ class FechasService
          }
          return $semana;
      }
+     public function isSabado(\DateTime $fechapartido){
+        $dia = "Sat";
+        $sabado = false;
+           if($fechapartido->format("D") == $dia){
+               $semana = true;
+           }else{
+                $sabado = false;
+           }
+         return $sabado;
+    }
 
      public function isAct(\Datetime $fecha){
         $actual = new \DateTime('now');

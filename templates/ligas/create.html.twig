@@ -31,11 +31,15 @@
             <th>Dia de la liga</th>
             <th>Termina la liga</th>
             <th class="text-center">Comenzar la nueva liga</th>
+            <th class="text-center">Eliminar liga</th>
+            <th class="text-center">Cambiar Fecha</th>
+
+
         </thead>
         <tbody>
             {% for liga in ligas %}
             <tr>
-                <td class="text-warning">{{liga.nombreLiga}}</td>
+                <td class="text-warning">{{liga.nombreLiga}} <span class="badge bg-primary">{{liga.getEquipos() | length}}</span></td>
                 <td>{{liga.deporte | upper}}</td>
                 <td style="overflow: scroll; overflow-x:hidden; height: 100px">
                     {% for equipo in liga.getEquipos() %}
@@ -51,8 +55,15 @@
                 
                 {% if liga.status == 0 %}
                 <td class="h-100"><button class="btn btn-primary" value="{{ liga.id }}" onclick="comenzar(event)">Comenzar</button></td>
+                <td class="h-100"><button class="btn btn-danger" value="{{ liga.id }}" onclick="eliminar(event)">Eliminar</button></td>
+                <td class="h-100"><button class="btn" style="background-color:orange; color:black" value="{{ liga.id }}" onclick="cambiar(event)">Cambiar_Fecha</button>
+                 <input class="mt-1" style="width: 140px" type="date" id="{{ liga.id }}" value="{{ liga.fecha.format('Y-m-d') }}">
+                </td>
                 {% else %}
                 <td class="fw-bold" style="color: rgb(21, 252, 0)">Ya esta en marcha</td>
+                <td></td>
+                <td></td>
+
                 {% endif %}
             </tr>
             {% endfor %}
@@ -69,9 +80,20 @@
 {% block scripts %}
  <script>
      function comenzar(e){
-         console.log('hola');
+        console.log('hola');
         var id = e.target.getAttribute('value');
         window.location.href = 'http://127.0.0.1:8000/ligas/startLiga/'+id;
+     }
+      function eliminar(e){
+        console.log('hola');
+        var id = e.target.getAttribute('value');
+        window.location.href = 'http://127.0.0.1:8000/ligas/removeLiga/'+id;
+     }
+
+    function cambiar(e){
+        var id = e.target.getAttribute('value');
+        var fecha = $("#"+id).val();
+        window.location.href = 'http://127.0.0.1:8000/ligas/changeLiga/'+id+"/"+fecha;
      }
      
 

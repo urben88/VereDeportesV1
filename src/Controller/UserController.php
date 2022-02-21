@@ -34,6 +34,7 @@ class UserController extends AbstractController
     public function solicita(): Response
     {
 
+        $user = $this->getUser();
         if($this->getUser()->getCapitan() == 1){
            return $this->redirectToRoute('home');
         }
@@ -46,13 +47,19 @@ class UserController extends AbstractController
         }else{
             $solicitudes = false;
         }
-        
+        $equipossolicitados = $this->em->getRepository(Solicita::class)->findBy(["id_usuario"=>$user->getId()]);
+        $equiposSoli = [];
+        foreach ($equipossolicitados as $value) {
+            $equiposSoli[] = $value->getIdEquipo();
+        }
         return $this->render('user/solicitar.html.twig',[
             'email'=>$this->nav->getDataNav()['email'],
             'admin'=>$this->nav->getDataNav()['admin'],
             'equipos'=>$equipos,
             'user'=>$this->getUser(),
-            'solicitudes'=>$solicitudes
+            'solicitudes'=>$solicitudes,
+            'equipossoli'=>$equiposSoli
+            
             
         ]);
     }
@@ -122,8 +129,11 @@ class UserController extends AbstractController
     public function aceptSolicitud($id){
         $user = $this->getUser();
         $solicitud = $this->em->getRepository(Solicita::class)->find($id);
+        $solicitante = $solicitud->getIdUsuario();
+        $solicitante->setEquipo($user->getEquipo());
         $solicitud->setAceptado(1);
         $this->em->persist($solicitud);
+        $this->em->persist($solicitante);
         $this->em->flush();
         $this->addFlash('exito','Se ha aceptado la solicitud');
         return $this->redirectToRoute('controlSolicitud');

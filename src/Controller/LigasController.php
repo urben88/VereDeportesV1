@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\LigaType;
 use App\Service\FechasService;
 use App\Service\NavService;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +46,7 @@ class LigasController extends AbstractController
                 $this->em->persist($liga);
                 $this->em->flush(); 
             }else{
-                $this->addFlash('error',"No puedes crear una liga del mismo deporte el mismo dia");
+                $this->addFlash('error',"No puedes crear una liga dentro del periodo de una activa");
             }
             
           }else{
@@ -66,12 +67,13 @@ class LigasController extends AbstractController
      */
     public function showLiga(){
         $ligas = $this->em->getRepository(Liga::class)->findAll();
-        
+        $ligasactivas = $this->em->getRepository(Liga::class)->findBy(['status'=>1]);
          return $this->render('ligas/show.html.twig', [
             'controller_name' => 'LigasController',
             'email'=>$this->nav->getDataNav()['email'],
             'admin'=>$this->nav->getDataNav()['admin'],
-            'ligas'=>$ligas
+            'ligas'=>$ligas,
+            'ligasact'=>$ligasactivas
         ]);
     }
      
@@ -121,15 +123,52 @@ class LigasController extends AbstractController
      */
     public function startLiga($id){
         $liga = $this->em->getRepository(Liga::class)->find($id);
-        if(count($liga->getEquipos()) < 10){
-            $this->addFlash('error', "No puedes empezar una liga con menos de 10 equipos");
-        }else{
-            if($this->em->getRepository(Liga::class)->start($id)){
-                
-            }else{
-                $this->addFlash('error',"No puedes empezar la liga");
+        if(count($liga->getEquipos()) < 4 || count($liga->getEquipos()) > 10){
+            if(count($liga->getEquipos()) < 4){
+                $this->addFlash('error', "No puedes empezar una liga con menos de 4 equipos");
             }
+            if(count($liga->getEquipos()) > 10){
+                $this->addFlash('error', "No puedes empezar la liga ya que como máximo solo pueden haber 10 equipos apuntados");
+            }
+            
+        }else{
+            $resul = $this->em->getRepository(Liga::class)->start($id);
+            if($resul[0]){
+                $this->addFlash('exito',$resul[1]);
+            }else{
+                $this->addFlash('error',$resul[1]);
+            }
+            // $this->em->getRepository(Liga::class)->start($id);
           
+        }
+        return $this->redirectToRoute("createLiga");
+    }
+     /**
+     * @Route("/removeLiga/{id}", name="removeLiga")
+     */
+    public function removeLiga($id){
+        $liga = $this->em->getRepository(Liga::class)->find($id);
+        $this->em->remove($liga);
+        $this->em->flush();
+        return $this->redirectToRoute("createLiga");
+    }
+      /**
+     * @Route("/changeLiga/{id}/{fecha}", name="changeLiga")
+     */
+    public function changeLiga($id,$fecha){
+        $newFecha = new \DateTime($fecha);
+        if($this->_fecha->isAct($newFecha)){
+            if($this->_fecha->isSabado($newFecha)){
+                $liga = $this->em->getRepository(Liga::class)->find($id);
+                $liga->setFecha($newFecha);
+                $this->em->persist($liga);
+                $this->em->flush(); 
+            }else{
+                $this->addFlash("error","La fecha debe ser un sabado");
+            }
+       
+        }else{
+            $this->addFlash("error","La nueva fecha debe de ser actual");
         }
         return $this->redirectToRoute("createLiga");
     }

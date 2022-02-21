@@ -28,6 +28,8 @@ class LigaType extends AbstractType
                 'label'=>'Selecciona dia:',
                 'date_widget' =>'single_text',
                  'with_seconds'=>false,
+                 'with_minutes'=>false,
+                 'hours'=>[0]
             ])
             ->add('save',SubmitType::class,[
                 'label'=>'Enviar',
