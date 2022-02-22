@@ -46,6 +46,7 @@ class EquipoController extends AbstractController
      */
     public function create(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $equipo = new Equipo;
         $solicitud = new Solicita;
         $form = $this->createForm(EquipoType::class,$equipo);
@@ -57,6 +58,7 @@ class EquipoController extends AbstractController
             $equipo->setDeporte($form['deporte']->getData());
             $capitan = $form['capitan']->getData();
             $capitan->setCapitan(true);
+            $capitan->setRoles(['ROLE_CAPI']);
             $solicitudesCapi = $this->em->getRepository(Solicita::class)->findBy(['id_usuario'=>$capitan->getId()]);
             if(count($solicitudesCapi)!= 0){
                 foreach ($solicitudesCapi as $solicitudd) {
@@ -101,7 +103,7 @@ class EquipoController extends AbstractController
      * @Route("/showEquipo",name="showEquipo")
      */
     public function verEquipo(){
-
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $equipo = $this->getUser()->getEquipo();
         $capitan = $this->em->getRepository(User::class)->findOneBy(['capitan'=>"1",'equipo'=>$this->getUser()->getEquipo()->getId()]);
         $partidos = [];
@@ -127,7 +129,6 @@ class EquipoController extends AbstractController
      * @Route("/showEquipo/{id}",name="showEquipoId")
      */
     public function showEquipoId($id){
-
         $equipo = $this->em->getRepository(Equipo::class)->find($id);
         $capitan = $this->em->getRepository(User::class)->findOneBy(['capitan'=>"1",'equipo'=>$equipo->getId()]);
         $reservas =$this->em->getRepository(Reserva::class)->findBy(['id_usuario'=>$capitan->getId()]);

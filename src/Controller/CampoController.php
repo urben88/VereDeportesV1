@@ -26,6 +26,7 @@ class CampoController extends AbstractController
     */
     public function create(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $admin = false;
         $campo = new Campo;
         $form = $this->createForm(CampoType::class,$campo);

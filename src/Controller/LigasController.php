@@ -34,6 +34,7 @@ class LigasController extends AbstractController
      */
     public function createLiga(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $liga = new Liga();
         $form = $this->createForm(LigaType::class,$liga);
         $form->handleRequest($request);
@@ -84,6 +85,7 @@ class LigasController extends AbstractController
      * @Route("/solicitarLiga", name="solicitarLiga")
      */
     public function solicitarLiga(){
+        $this->denyAccessUnlessGranted('ROLE_CAPI');
         $ligas = $this->em->getRepository(Liga::class)->findAll();
         return $this->render('ligas/solicitar.html.twig', [
             'controller_name' => 'LigasController',
@@ -98,6 +100,7 @@ class LigasController extends AbstractController
      * @Route("/solicitarUnaLiga/{id}", name="solicitarUnaLiga")
      */
     public function solicitarUnaLiga($id){
+        $this->denyAccessUnlessGranted('ROLE_CAPI');
         $equipo  = $this->getUser()->getEquipo();
         $liga = $this->em->getRepository(Liga::class)->find($id);
         $equipo->addLiga($liga);
@@ -111,6 +114,7 @@ class LigasController extends AbstractController
      * @Route("/removesolicitarUnaLiga/{id}", name="removesolicitarUnaLiga")
      */
     public function removesolicitarUnaLiga($id){
+        $this->denyAccessUnlessGranted('ROLE_CAPI');
         $equipo  = $this->getUser()->getEquipo();
         $liga = $this->em->getRepository(Liga::class)->find($id);
         $liga->removeEquipo($equipo);
@@ -125,6 +129,7 @@ class LigasController extends AbstractController
      * @Route("/startLiga/{id}", name="startLiga")
      */
     public function startLiga($id){
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $liga = $this->em->getRepository(Liga::class)->find($id);
         if(count($liga->getEquipos()) < 4 || count($liga->getEquipos()) > 10){
             if(count($liga->getEquipos()) < 4){
@@ -150,6 +155,7 @@ class LigasController extends AbstractController
      * @Route("/removeLiga/{id}", name="removeLiga")
      */
     public function removeLiga($id){
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $liga = $this->em->getRepository(Liga::class)->find($id);
         $this->em->remove($liga);
         $this->em->flush();
@@ -159,6 +165,7 @@ class LigasController extends AbstractController
      * @Route("/changeLiga/{id}/{fecha}", name="changeLiga")
      */
     public function changeLiga($id,$fecha){
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $liga = $this->em->getRepository(Liga::class)->find($id);
         $newFecha = new \DateTime($fecha);
         if($this->_fecha->isAct($newFecha)){
@@ -195,6 +202,7 @@ class LigasController extends AbstractController
      * @Route("/setResultados", name="setResultados")
      */
     public function setResultados(){
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $user = $this->getUser();
         $partidos = $this->em->getRepository(Partido::class)->findBy(['id_profesor'=>$user->getId()]);
         $ligarepository = $this->em->getRepository(Liga::class);
@@ -207,6 +215,23 @@ class LigasController extends AbstractController
             'ligarepository'=>$ligarepository,
             '_fecha'=>$this->_fecha
         ]);
+    }
+    /**
+     * @Route("changeResultados/{id}/{local}/{visitante}",name="changeResultados")
+     */
+    public function changeResultados($id,$local,$visitante){
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $partido = $this->em->getRepository(Partido::class)->find($id);
+        if($local != 'null' && $visitante != 'null'){
+            $partido->setResulEquipo1($local);
+            $partido->setResulEquipo2($visitante);
+            $this->em->persist($partido);
+            $this->em->flush();
+        }else{
+            $this->addFlash('error',"Uno de los resultados es null o undefined");
+        }
+        return $this->redirectToRoute('setResultados');
+        
     }
 
 

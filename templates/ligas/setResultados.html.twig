@@ -51,7 +51,7 @@
                 {% if _fecha.isAct(partido.getFechaAcaba()) %}
                     <td style="color: red">El partido no se ha jugado todavía</td>
                 {% else %}
-                    <td><button onclick="change(event)" value="{{ partido.id }}" class="btn btn-primary" style="background-color: orange; border: none;"><i class="fa-solid fa-pen"></i></button> </td> 
+                    <td><div onclick="putResult(event)" value="{{ partido.id }}" class="btn btn-primary" style="background-color: orange; border: none;"><i class="fa-solid fa-pen"></i></div> </td> 
                 {% endif %}
                 
                 
@@ -67,14 +67,20 @@
 {% endblock %}
 
 {% block scripts %}
- <script>
-  function change(e){
-      e.preventDefault();
+   <script>
+  function putResult(e){
+      // e.preventDefault(); 
       var id = e.target.getAttribute('value');
       var local = $('#local'+id).val();
       var visitante = $('#visitante'+id).val();
-      console.log(local,visitante);
-    //   window.location.href = "http://127.0.0.1:8000/ligas/changeResultados/"+id+"/"+local+"/"+visitante;
+      if(!local){
+          local = 'null';
+      }
+       if(!visitante){
+          visitante = 'null';
+      }
+      console.log(local,visitante,id);
+     // window.location.href = "http://127.0.0.1:8000/ligas/changeResultados/"+id+"/"+local+"/"+visitante;
   }
 
  </script>

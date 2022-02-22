@@ -5,7 +5,7 @@
         <a href="{{ path('register') }}">Register</a>
         {% if email %}
 
-            {% if admin %}
+            {% if is_granted('ROLE_ADMIN') %}
                 <span class="verde">{{email}}</span>
             {% else %}
                 <span class="azul">{{email}}</span>
@@ -37,7 +37,7 @@
         <a href="{{ path('showLiga') }}">Ver Ligas</a>
         {% endif %} 
 
-        {% if app.user.roles[0] == "ROLE_USER" and app.user.capitan == 1 %}
+        {% if app.user.roles[0] == "ROLE_CAPI" and app.user.capitan == 1 %}
         <a href="{{ path('showEquipo') }}">Ver mi equipo</a>
         <a href="{{ path('createReserva') }}">Hacer Reserva</a>
         <a href="{{ path('solicitarLiga') }}">Solicitar Liga</a>

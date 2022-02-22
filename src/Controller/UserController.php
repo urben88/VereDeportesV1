@@ -33,7 +33,7 @@ class UserController extends AbstractController
      */
     public function solicita(): Response
     {
-
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
         if($this->getUser()->getCapitan() == 1){
            return $this->redirectToRoute('home');
@@ -67,6 +67,7 @@ class UserController extends AbstractController
      * @Route("/solicitar/equipo/{id}",name="solicitarEquipo")
      */
     public function solicitarEquipo($id){
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
         //? Cojo el atributo id del objeto json.
         $solicitud = new Solicita();
@@ -84,6 +85,7 @@ class UserController extends AbstractController
      * @Route("/solicitar/equiporemove/{id}",name="solicitarRemoveEquipo")
      */
     public function solicitarEquipoRemove($id){
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
         //? Cojo el atributo id del objeto json.
         $solicitud = $this->em->getRepository(Solicita::class)->findOneBy(['id_equipo'=>$id,'id_usuario'=>$user->getId()]);
@@ -97,6 +99,7 @@ class UserController extends AbstractController
      * @Route("/controlSolicitud", name="controlSolicitud")
      */
     public function aceptarSolicitud(){
+        $this->denyAccessUnlessGranted('ROLE_CAPI');
         $user = $this->getUser();
         $equipo = $user->getEquipo();
         $solicitudes = $this->em->getRepository(Solicita::class)->findBy(['id_equipo'=>$equipo->getId(),'aceptado'=>'0']);
@@ -114,6 +117,7 @@ class UserController extends AbstractController
      * @Route("/removeSolicitud/{id}", name="removeSolicitud")
      */
     public function removeSolicitud($id){
+        $this->denyAccessUnlessGranted('ROLE_CAPI');
         $user = $this->getUser();
         $solicitud = $this->em->getRepository(Solicita::class)->find($id);
         $this->em->remove($solicitud);
@@ -127,6 +131,7 @@ class UserController extends AbstractController
      * @Route("/aceptSolicitud/{id}", name="aceptSolicitud")
      */
     public function aceptSolicitud($id){
+        $this->denyAccessUnlessGranted('ROLE_CAPI');
         $user = $this->getUser();
         $solicitud = $this->em->getRepository(Solicita::class)->find($id);
         $solicitante = $solicitud->getIdUsuario();

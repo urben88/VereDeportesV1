@@ -32,9 +32,11 @@ class ReservaController extends AbstractController
      * @Route("/createReserva",name="createReserva")
      */
     public function createReserva(Request $request): Response
-    {
-        // ! Datos necesarios para la reserva
+    { 
         $user = $this->getUser();
+        $this->denyAccessUnlessGranted('ROLE_CAPI');
+        // ! Datos necesarios para la reserva
+       
         $campos = $this->em->getRepository(Campo::class)->findAll();
         $reservas = $this->em->getRepository(Reserva::class)->findBy(['id_usuario'=>$user->getId()]);
         $reserva = new Reserva();
@@ -104,6 +106,7 @@ class ReservaController extends AbstractController
      * @Route("/removeReserva",name="removeReserva")
      */
     public function removeReserva(Request $response){
+        $this->denyAccessUnlessGranted('ROLE_CAPI');
         $json= $response->get('id',null);
         $data = json_decode($json);
         $reserva = $this->em->getRepository(Reserva::class)->findOneBy(['id'=>$json]);
@@ -116,6 +119,7 @@ class ReservaController extends AbstractController
      * @Route("/adminReserva",name="adminReserva")
      */
     public function adminReservas(){
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $user = $this->getUser();
         $reservasProfesor = $user->getReservasProfesor();
         $admins = $this->em->getRepository(User::class)->getAdmins();
@@ -135,6 +139,7 @@ class ReservaController extends AbstractController
      * @Route("/changeVigilancia/{idr}/{idp}",name="changeVigilancia")
      */
     public function changeVigilancia($idr,$idp){
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $reserva = $this->em->getRepository(Reserva::class)->find($idr);
         $profesor = $this->em->getRepository(User::class)->find($idp);
         $reserva->setIdProfesor($profesor);
@@ -147,7 +152,9 @@ class ReservaController extends AbstractController
      * @Route("/showReservasEquipo",name="showReservasEquipo")
      */
     public function showReservasEquipo(){
-      
+        if(!$this->isGranted('ROLE_USER') && !$this->isGranted('ROLE_CAPI')){
+            throw $this->createAccessDeniedException('not allowed');
+        }
         $user = $this->getUser();
         $equipo = $user->getEquipo();
         $capitan = $this->em->getRepository(User::class)->findOneBy(['capitan'=>1,'equipo'=>$equipo->getId()]);

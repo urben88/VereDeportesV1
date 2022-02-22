@@ -7,6 +7,8 @@ security:
             algorithm: auto
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    role_hierarchy:
+
     providers:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
@@ -37,10 +39,12 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/home, roles: ROLE_USE }
+        - { path: ^/, roles: ROLE_ADMIN }
 
 when@test:
     security:
+
+
         password_hashers:
             # By default, password hashers are resource intensive and take time. This is
             # important to generate secure password hashes. In tests however, secure hashes
