@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Equipo;
+use App\Entity\Liga;
+use App\Entity\Partido;
+use App\Entity\Reserva;
 use App\Entity\Solicita;
 use App\Form\EquipoType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,6 +22,7 @@ use App\Service\FechasService;
 
 //Entidades
 use App\Entity\User;
+use App\Form\LigaType;
 use App\Repository\EquipoRepository;
 
 /**
@@ -100,12 +104,22 @@ class EquipoController extends AbstractController
 
         $equipo = $this->getUser()->getEquipo();
         $capitan = $this->em->getRepository(User::class)->findOneBy(['capitan'=>"1",'equipo'=>$this->getUser()->getEquipo()->getId()]);
+        $partidos = [];
+        $partidoslocal = $this->em->getRepository(Partido::class)->findBy(['equipo1'=>$equipo->getId()]);
+        $partidosvisitante = $this->em->getRepository(Partido::class)->findBy(['equipo2'=>$equipo->getId()]);
+        $partidos = array_merge($partidoslocal,$partidosvisitante);
+        sort($partidos);
+        $ligarepository = $this->em->getRepository(Liga::class);
+        
         return $this->render('equipo/show.html.twig', [
             'controller_name' => 'HomeController',
             'email'=>$this->usuario['email'],
             'admin'=>$this->usuario['admin'],
             'equipo'=> $equipo,
-            'capitan'=>$capitan
+            'capitan'=>$capitan,
+            '_fecha'=>$this->_fechas,
+            'partidos'=>$partidos,
+            'ligarepository'=>$ligarepository
         ]); 
     }
 
@@ -116,12 +130,24 @@ class EquipoController extends AbstractController
 
         $equipo = $this->em->getRepository(Equipo::class)->find($id);
         $capitan = $this->em->getRepository(User::class)->findOneBy(['capitan'=>"1",'equipo'=>$equipo->getId()]);
+        $reservas =$this->em->getRepository(Reserva::class)->findBy(['id_usuario'=>$capitan->getId()]);
+        $partidos = [];
+        $partidoslocal = $this->em->getRepository(Partido::class)->findBy(['equipo1'=>$equipo->getId()]);
+        $partidosvisitante = $this->em->getRepository(Partido::class)->findBy(['equipo2'=>$equipo->getId()]);
+        $partidos = array_merge($partidoslocal,$partidosvisitante);
+        sort($partidos);
+        $ligarepository = $this->em->getRepository(Liga::class);
+        
         return $this->render('equipo/showId.html.twig', [
             'controller_name' => 'HomeController',
             'email'=>$this->usuario['email'],
             'admin'=>$this->usuario['admin'],
             'equipo'=> $equipo,
-            'capitan'=>$capitan
+            'capitan'=>$capitan,
+            'reservas'=>$reservas,
+            '_fecha'=>$this->_fechas,
+            'partidos'=>$partidos,
+            'ligarepository'=>$ligarepository
         ]); 
     }
 

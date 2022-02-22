@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Añadir resultados{% endblock %}
+
+{% block styles %}
+
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('css/formularios/liga/form.css') }}">
+ <link rel='stylesheet' href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=='" crossorigin='anonymous' referrerpolicy='no-referrer' />
+{% endblock %}
+ 
+{% block header %}
+   {{ include("componentes/nav.html.twig") }}
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+    <h1 class="h1 text-center mt-4">Estas en añadir resultados de tus Partidos</h1>
+
+    <table class="table table-dark">
+        <legend>Partidos</legend>
+        <thead>
+            <th>Nombre de la liga</th>
+            <th>Deporte</th>
+            <th>Local</th>
+            <th>Visitante</th>
+            <th>Fecha partido</th>
+            <th>Fecha acaba</th>
+            <th>Puntos Local</th>
+            <th>Puntos Visitante</th>
+            <th>Poner</th>
+        </thead>
+        <tbody>
+          {% for partido in partidos %}
+              <tr id="{{ partido.id }}">
+                <td>{{ partido.getIdLiga().getNombreLiga() }}</td>
+                <td>{{ partido.getIdLiga().getDeporte() }}</td>
+                <td>{{ ligarepository.getEquipo(partido.equipo1).nombre }}</td>
+                <td>{{ ligarepository.getEquipo(partido.equipo2).nombre }}</td>
+                <td>{{ partido.getFechaPartido().format('Y-m-d H:i:s')}}</td>
+                <td>{{ partido.getFechaAcaba().format('Y-m-d H:i:s')}}</td>
+                {% if partido.getIdLiga().getDeporte() == "futbol" %}
+                <td><input id="local{{partido.id}}" type="number" max="15" min="0" placeholder="Goles"></td>
+                <td><input id="visitante{{partido.id}}" type="number" max="15" min="0" placeholder="Goles"></td>
+                {% else %}
+                <td><input id="local{{partido.id}}" type="number" max="150" min="0" placeholder="Puntos"></td>
+                <td><input id="visitante{{partido.id}}" type="number" max="150" min="0" placeholder="Puntos"></td>
+                {% endif %}
+                {% if _fecha.isAct(partido.getFechaAcaba()) %}
+                    <td style="color: red">El partido no se ha jugado todavía</td>
+                {% else %}
+                    <td><button onclick="change(event)" value="{{ partido.id }}" class="btn btn-primary" style="background-color: orange; border: none;"><i class="fa-solid fa-pen"></i></button> </td> 
+                {% endif %}
+                
+                
+              </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+  
+</div>
+   {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">* {{ message }}</div>
+    {% endfor %}
+{% endblock %}
+
+{% block scripts %}
+ <script>
+  function change(e){
+      e.preventDefault();
+      var id = e.target.getAttribute('value');
+      var local = $('#local'+id).val();
+      var visitante = $('#visitante'+id).val();
+      console.log(local,visitante);
+    //   window.location.href = "http://127.0.0.1:8000/ligas/changeResultados/"+id+"/"+local+"/"+visitante;
+  }
+
+ </script>
+{% endblock %}

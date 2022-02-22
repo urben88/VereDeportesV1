@@ -23,6 +23,7 @@
         <a href="{{ path('createLiga') }}">Crear Liga</a>
         <a href="{{ path('equipo') }}">Ver/Crear Equipo</a>
         <a href="{{ path('showLiga') }}">Ver Ligas</a>
+        <a href="{{ path('setResultados') }}">Poner resultados</a>
         {% endif %} 
 
         {% if app.user.roles[0] == "ROLE_USER" and app.user.capitan == 0 %}

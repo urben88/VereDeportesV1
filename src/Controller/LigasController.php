@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Equipo;
 use App\Entity\Liga;
+use App\Entity\Partido;
 use App\Entity\User;
 use App\Form\LigaType;
 use App\Service\FechasService;
@@ -39,14 +40,15 @@ class LigasController extends AbstractController
         $ligas = $this->em->getRepository(Liga::class)->findAll();
         if($form->isSubmitted() && $form->isValid()){
           if($this->_fecha->isAct($form['fecha']->getData())){
-            if( $this->em->getRepository(Liga::class)->isValida($form['fecha']->getData(),$form['deporte']->getData())){
+              $esvalida =$this->em->getRepository(Liga::class)->isValida($form['fecha']->getData(),$form['deporte']->getData());
+            if($esvalida[0]){
                 $liga->setDeporte($form['deporte']->getData());
                 $liga->setStatus(0);
                 $liga->setFechaCreacion(new \DateTime('now'));
                 $this->em->persist($liga);
                 $this->em->flush(); 
             }else{
-                $this->addFlash('error',"No puedes crear una liga dentro del periodo de una activa");
+                $this->addFlash('error',$esvalida[0]);
             }
             
           }else{
@@ -59,7 +61,8 @@ class LigasController extends AbstractController
             'email'=>$this->nav->getDataNav()['email'],
             'admin'=>$this->nav->getDataNav()['admin'],
             'formulario'=>$form->createView(),
-            'ligas'=>$ligas
+            'ligas'=>$ligas,
+            '_fecha'=>$this->_fecha
         ]);
     }
     /**
@@ -156,21 +159,54 @@ class LigasController extends AbstractController
      * @Route("/changeLiga/{id}/{fecha}", name="changeLiga")
      */
     public function changeLiga($id,$fecha){
+        $liga = $this->em->getRepository(Liga::class)->find($id);
         $newFecha = new \DateTime($fecha);
         if($this->_fecha->isAct($newFecha)){
-            if($this->_fecha->isSabado($newFecha)){
-                $liga = $this->em->getRepository(Liga::class)->find($id);
+            $result = $this->em->getRepository(Liga::class)->isValida($newFecha,$liga->getDeporte());
+            if($result[0]){
+            
                 $liga->setFecha($newFecha);
                 $this->em->persist($liga);
                 $this->em->flush(); 
             }else{
-                $this->addFlash("error","La fecha debe ser un sabado");
+                 $this->addFlash("error",$result[2]);
             }
        
         }else{
             $this->addFlash("error","La nueva fecha debe de ser actual");
         }
         return $this->redirectToRoute("createLiga");
+    }
+    /**
+     * @Route("/show/{id}",name="showOne")
+     */
+    public function showOne($id){
+        $liga = $this->em->getRepository(Liga::class)->find($id);
+        $repositorioliga = $this->em->getRepository(Liga::class);
+        return $this->render('ligas/showone.html.twig', [
+            'controller_name' => 'LigasController',
+            'email'=>$this->nav->getDataNav()['email'],
+            'admin'=>$this->nav->getDataNav()['admin'],
+            'liga'=>$liga,
+            'ligarepository'=>$repositorioliga
+        ]);
+    }
+    /**
+     * @Route("/setResultados", name="setResultados")
+     */
+    public function setResultados(){
+        $user = $this->getUser();
+        $partidos = $this->em->getRepository(Partido::class)->findBy(['id_profesor'=>$user->getId()]);
+        $ligarepository = $this->em->getRepository(Liga::class);
+
+        return $this->render('ligas/setResultados.html.twig', [
+            'controller_name' => 'LigasController',
+            'email'=>$this->nav->getDataNav()['email'],
+            'admin'=>$this->nav->getDataNav()['admin'],
+            'partidos'=>$partidos,
+            'ligarepository'=>$ligarepository,
+            '_fecha'=>$this->_fecha
+        ]);
     }
 
 

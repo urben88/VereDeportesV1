@@ -5,7 +5,14 @@
 {% block styles %}
 {{ parent() }}
 <link rel="stylesheet" href="{{ asset('css/formularios/liga/form.css') }}">
-
+<style>
+.nombre:hover{
+    color:blue;
+}
+.nombre{
+    cursor:pointer;
+}
+</style>
 {% endblock %}
  
 {% block header %}
@@ -19,7 +26,7 @@
     <h1 class="h1 text-center mt-4">Estas en Ver Liga</h1>
 
     <table class="table table-dark">
-        <legend>Ligas</legend>
+        <legend>Ligas Activas</legend>
         <thead>
             <th>Nombre de la liga</th>
             <th>Deporte</th>
@@ -29,7 +36,7 @@
             {% for liga in ligas %}
             {% if liga.status %}
             <tr>
-                <td>{{liga.nombreLiga}}</td>
+                <td class="nombre" onclick="ir(event)" value="{{ liga.getId() }}">{{liga.nombreLiga}}</td>
                 <td>{{liga.deporte | upper}}</td>
                  <td style="overflow: scroll; overflow-x:hidden; height: 100px">                            
                     {% for equipo in liga.getEquipos() %}
@@ -52,13 +59,20 @@
 
 {% block scripts %}
  <script>
-     function comenzar(){
+     {# function comenzar(){
         $.post("http://127.0.0.1:8000/ligas/startLiga", data,
             function (data, textStatus, jqXHR) {
                 console.log(data);
             },
         );
-     }
+     } #}
+    function ir(e){
+        console.log('yee')
+        let id = e.target.getAttribute('value');
+        window.location.href = "http://127.0.0.1:8000/ligas/show/"+id;
+
+    }
+
      
 
  </script>

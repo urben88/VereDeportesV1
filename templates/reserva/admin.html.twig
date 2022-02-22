@@ -36,6 +36,8 @@
             </thead>
             <tbody>
             {% for reserva in reservas %}
+                {% if _fecha.isAct(reserva.getFecha()) %}
+            
                 <tr id="{{ reserva.id }}">
                     <th>{{ reserva.id }}</th>
                     <td>{{ reserva.getIdCampo().nombre}}</td>
@@ -45,6 +47,7 @@
                     <td>{{ reserva.getFechaCaduca().format('Y-m-d H:i:s') }}</td>
                     <td> <button onclick="cancelar(event)" value="{{ reserva.id }}" class="btn btn-danger" >Cancelar</button></td>
                 </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
 

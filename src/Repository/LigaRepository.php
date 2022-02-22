@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Campo;
+use App\Entity\Equipo;
 use App\Entity\Liga;
 use App\Entity\Partido;
 use App\Entity\User;
@@ -68,20 +69,18 @@ class LigaRepository extends ServiceEntityRepository
     
         
         foreach( $ligas as $liga){
-            if($empieza >= $liga->getFecha() && $empieza <= $liga->getFechaTermina()){
-                return false;
-            }
-            
             $sabadoliga = $this->_fecha->nextSaturday($liga->getFecha());
             $otramax = clone $liga->getFecha();
             $otramax = $otramax->modify("+".($semanasmax)."days");
-            
-            if(($sabadoliga >= $fechamin && $sabadoliga <= $fechamax) || ($otramax >=  $fechamin && $otramax <= $fechamax)){
-                return false;
+           
+            if($empieza >= $liga->getFecha() && $empieza <= $liga->getFechaTermina()){
+                return [false,"No puedes crear una liga en un periodo de tiempo de una liga activa","No cambiar la fecha de una liga en un periodo de tiempo de una liga activa"];
+            }else if(($sabadoliga >= $fechamin && $sabadoliga <= $fechamax) || ($otramax >=  $fechamin && $otramax <= $fechamax)){
+                return [false,"No puedes crear una liga en un periodo de tiempo de otra liga (Las ligas no comenzadas tienen por defecto una duración de 17 semanas)","No puedes modificar la fecha de la liga en un periodo de tiempo de otra liga (Las ligas no comenzadas tienen por defecto una duración de 17 semanas)"];
             }
         }
         
-        return true;
+        return [true,"Es correcta"];
        
     }
     
@@ -224,6 +223,12 @@ class LigaRepository extends ServiceEntityRepository
         }
         return true;
     }
+    
+    function getEquipo($id){
+        $equipo = $this->_em->getRepository(Equipo::class)->find($id);
+        return $equipo;
+    }
+
 
 
 

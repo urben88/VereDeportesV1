@@ -28,7 +28,8 @@
             <th>Nombre de la liga</th>
             <th>Deporte</th>
             <th>Equipos que han solicitado</th>
-            <th>Dia de la liga</th>
+            <th>Dia propuesto</th>
+            <th>Sabado que empezará</th>
             <th>Termina la liga</th>
             <th class="text-center">Comenzar la nueva liga</th>
             <th class="text-center">Eliminar liga</th>
@@ -47,8 +48,9 @@
                     {% endfor %}
                 </td>
                 <td style="width: 150px">{{ liga.fecha.format('Y-m-d') }}</td>
+                <td style="width: 150px">{{ _fecha.nextSaturday(liga.fecha).format('Y-m-d') }}</td>
                 {% if liga.getFechaTermina() == null %}
-                <td style="width: 150px">No generada</td>
+                <td style="width: 150px">Max: {{ _fecha.fechaMax(liga.getFecha()).format('Y-m-d')}}</td>
                 {% else %}
                 <td style="width: 150px">{{ liga.getFechaTermina().format('Y-m-d') }}</td>
                 {% endif %}

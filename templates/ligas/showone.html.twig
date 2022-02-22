@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ver liga{% endblock %}
+
+{% block styles %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('css/formularios/liga/form.css') }}">
+<style>
+.nombre:hover{
+    color:blue;
+}
+.nombre{
+    cursor:pointer;
+}
+</style>
+{% endblock %}
+ 
+{% block header %}
+   {{ include("componentes/nav.html.twig") }}
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+    <h1 class="h1 text-center mt-4">Estas en Ver una liga</h1>
+    
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Nombre de la liga: <strong>{{ liga.getNombreLiga() }}</strong></h4>
+        <p>Deporte: <strong>{{ liga.deporte | upper }}</strong></p>
+        <hr>
+        <p class="mb-0">Comienza el sabado: <strong>{{ liga.fecha.format("Y-m-d") }}</strong></p>
+        <p class="mb-0">Acaba el domingo: <strong>{{ liga.getFechaTermina().format("Y-m-d") }}</strong></p>
+
+    </div>
+    
+    <table class="table table-dark">
+        <legend>Partidos de la liga</legend>
+        <thead>
+            <th>Local</th>
+            <th>Visitante</th>
+            <th>Resul Local</th>
+            <th>Resul Visitante</th>
+            <th>Profesor que vigila</th>
+            <th>Campo</th>
+            <th>Comienza</th>
+            <th>Finaliza</th>
+
+        </thead>
+        <tbody>
+        {% for partido in liga.getPartidos() %}
+            <tr>
+                <td class="nombre" onclick="ir(event)" value="{{ partido.equipo1 }}">{{ligarepository.getEquipo(partido.equipo1).nombre}}</td>
+                <td class="nombre" onclick="ir(event)" value="{{ partido.equipo2 }}">{{ligarepository.getEquipo(partido.equipo2).nombre}}</td>
+                <td>{% if partido.getResulEquipo1() == null %}
+                        <span style="color:red">No hay resultado<span>
+                    {% else %}
+                       <span style="color:green">{{ partido.getResulEquipo1()}}</span>
+                    {% endif %}
+                </td>
+                 <td>{% if partido.getResulEquipo2() == null %}
+                        <span style="color:red">No hay resultado<span>
+                     {% else %}
+                       <span style="color:green">{{ partido.getResulEquipo2()}}</span>
+                    {% endif %}
+                </td>
+                <td>{{ partido.getIdProfesor().nombre }}</td>
+                <td>{{ partido.getIdCampo().nombre }}</td>
+                <td>{{ partido.getFechaPartido().format('Y-m-d H:i:s') }}</td>
+                <td>{{ partido.getFechaAcaba().format('Y-m-d H:i:s') }}</td>
+                
+            </tr>
+        {% endfor %}
+         
+        </tbody>
+    </table>
+  
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+    function ir(e){
+        console.log('yee')
+        let id = e.target.getAttribute('value');
+        window.location.href = "http://127.0.0.1:8000/equipo/showEquipo/"+id;
+
+    }
+
+</script>
+
+     
+
+{% endblock %}

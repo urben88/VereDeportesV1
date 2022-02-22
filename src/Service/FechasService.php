@@ -3,18 +3,22 @@
 
 namespace App\Service;
 
+use App\Entity\Equipo;
 use DateInterval;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
 class FechasService
 {
 
     public $security;
+    public $em;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security,EntityManagerInterface $em)
     {
         $this->security = $security;
+        $this->em = $em;
     }
 
     public function getAct(){
@@ -81,5 +85,12 @@ class FechasService
         return $clon->modify("+".$dia."days");
     
     }
-
+    function fechaMax(DateTime $fecha){
+        $semanasmax=  7*(18-1);
+        $sabadoliga = $this->nextSaturday($fecha);
+        $otramax = clone $sabadoliga;
+        $otramax = $otramax->modify("+".($semanasmax)."days");
+        return $otramax;
+    }
+  
 }

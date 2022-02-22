@@ -125,7 +125,8 @@ class ReservaController extends AbstractController
             'email'=>$this->nav->getDataNav()['email'],
             'admin'=>$this->nav->getDataNav()['admin'],
             'reservas'=>$reservasProfesor,
-            'admins'=>$admins
+            'admins'=>$admins,
+            '_fecha'=>$this->_fecha
             // 'fecha' => $fecha->format('Y-m-d H:i:s')
         ]);
 
