@@ -56,7 +56,13 @@
                 {% endif %}
                 
                 {% if liga.status == 0 %}
-                <td class="h-100"><button class="btn btn-primary" value="{{ liga.id }}" onclick="comenzar(event)">Comenzar</button></td>
+                {% if _fecha.isAct(_fecha.nextSaturday(liga.fecha)) %}
+                 <td class="h-100"><button class="btn btn-primary" value="{{ liga.id }}" onclick="comenzar(event)">Comenzar</button></td>
+                 {% else %}
+                 <td style="color:red">No puedes comenzar una liga con un sabado pasado</td>
+                {% endif %}
+                
+               
                 <td class="h-100"><button class="btn btn-danger" value="{{ liga.id }}" onclick="eliminar(event)">Eliminar</button></td>
                 <td class="h-100"><button class="btn" style="background-color:orange; color:black" value="{{ liga.id }}" onclick="cambiar(event)">Cambiar_Fecha</button>
                  <input class="mt-1" style="width: 140px" type="date" id="{{ liga.id }}" value="{{ liga.fecha.format('Y-m-d') }}">

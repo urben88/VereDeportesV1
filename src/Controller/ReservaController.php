@@ -171,4 +171,33 @@ class ReservaController extends AbstractController
 
     }
 
+    /**
+     * @Route("/showTiempo/{id}",name="showTiempo")
+     */
+    public function showTiempo($id){
+        $reserva  = $this->em->getRepository(Reserva::class)->find($id);
+        $data = file_get_contents("https://api.weatherbit.io/v2.0/forecast/daily?city=Raleigh,NC&key=0c56d8ca653b4ef5be7cdad7fff4bf64");
+        $json = json_decode($data);
+        foreach ($json->data as $dia) {
+            // $reserva->getFecha()->format("Y-m-d")
+            if($dia->datetime == $reserva->getFecha()->format("Y-m-d")){
+                $encontrado = $dia;
+                $imagen = "https://www.weatherbit.io/static/img/icons/".$dia->weather->icon.".png";
+            
+            }
+        }
+
+        return $this->render('reserva/showTiempo.html.twig', [
+            'controller_name' => 'ReservaController',
+            'email'=>$this->nav->getDataNav()['email'],
+            'admin'=>$this->nav->getDataNav()['admin'],
+            "_fecha"=>$this->_fecha,
+             "data"=>$encontrado,
+             "imagen"=>$imagen,
+             "diareserva"=>$reserva->getFecha()->format("Y-m-d")
+             //'fecha' => $fecha->format('Y-m-d H:i:s')
+        ]);
+    }
+
+
 }

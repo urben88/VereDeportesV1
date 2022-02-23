@@ -4,12 +4,21 @@
         </div>
 {% else %} 
 
+<style>
+    .nombre{
+        cursor: pointer;
+    }
+    .nombre:hover{
+        color: blue;
+    }
+</style>
 <table class="table table-dark my-3">
 
     <thead>
         <th>Campo</th>
         <th>Profesor</th>
         <th>Fecha creación</th>
+        <th>Ver tiempo</th>
         <th>Fecha Reserva</th>
         <th>Fecha caduca</th>
         <th>Cancelar</th>
@@ -21,6 +30,7 @@
             <td>{{ reserva.getIdCampo().nombre}}</td>
             <td>{{ reserva.getIdProfesor().nombre }}</td>
             <td>{{ reserva.getFechaCreacion().format('Y-m-d H:i:s') }}</td>
+            <td onclick="irtiempo(event)" value="{{ reserva.getId() }}" class="nombre">Ver</td>
             <td>{{ reserva.getFecha().format('Y-m-d H:i:s') }}</td>
             <td>{{ reserva.getFechaCaduca().format('Y-m-d H:i:s') }}</td>
             <td> <button onclick="cancelar(event)" value="{{ reserva.id }}" class="btn btn-danger" >Cancelar</button></td>
@@ -45,6 +55,11 @@
                 $('#'+id).remove();
               }
         },);
+    }
+    
+    function irtiempo(e){
+        let id = e.target.getAttribute('value');
+        window.location.href = "http://127.0.0.1:8000/reserva/showTiempo/"+id;
     }
 </script>
 {% endif %}

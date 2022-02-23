@@ -30,7 +30,7 @@
             <th>Fecha acaba</th>
             <th>Puntos Local</th>
             <th>Puntos Visitante</th>
-            <th>Poner</th>
+            <th>Poner/Modificar</th>
         </thead>
         <tbody>
           {% for partido in partidos %}
@@ -42,11 +42,32 @@
                 <td>{{ partido.getFechaPartido().format('Y-m-d H:i:s')}}</td>
                 <td>{{ partido.getFechaAcaba().format('Y-m-d H:i:s')}}</td>
                 {% if partido.getIdLiga().getDeporte() == "futbol" %}
-                <td><input id="local{{partido.id}}" type="number" max="15" min="0" placeholder="Goles"></td>
-                <td><input id="visitante{{partido.id}}" type="number" max="15" min="0" placeholder="Goles"></td>
+                    {% if partido.getResulEquipo1() != null %}
+                     <td><input value="{{ partido.getResulEquipo1() }}" id="local{{partido.id}}" type="number" max="15" min="0" placeholder="Goles"></td>
+                    {% else %}
+                     <td><input  id="local{{partido.id}}" type="number" max="15" min="0" placeholder="Goles"></td>
+                    {% endif %}
+                    
+                    {% if partido.getResulEquipo2() != null %}
+                        <td><input value="{{ partido.getResulEquipo2() }}" id="visitante{{partido.id}}" type="number" max="15" min="0" placeholder="Goles"></td>
+                    {% else %}
+                        <td><input id="visitante{{partido.id}}" type="number" max="15" min="0" placeholder="Goles"></td>
+                    {% endif %}
+                    
+                   
                 {% else %}
-                <td><input id="local{{partido.id}}" type="number" max="150" min="0" placeholder="Puntos"></td>
-                <td><input id="visitante{{partido.id}}" type="number" max="150" min="0" placeholder="Puntos"></td>
+                    {% if partido.getResulEquipo1() != null %}
+                        <td><input value="{{ partido.getResulEquipo1() }}" id="local{{partido.id}}" type="number" max="150" min="0" placeholder="Puntos"></td>
+                    {% else %}
+                        <td><input id="local{{partido.id}}" type="number" max="150" min="0" placeholder="Puntos"></td>
+                    {% endif %}
+                    
+                    {% if partido.getResulEquipo2() != null %}
+                        <td><input value="{{ partido.getResulEquipo2() }}" id="visitante{{partido.id}}" type="number" max="150" min="0" placeholder="Puntos"></td>
+                    {% else %}
+                        <td><input id="visitante{{partido.id}}" type="number" max="150" min="0" placeholder="Puntos"></td>
+                    {% endif %}  
+                  
                 {% endif %}
                 {% if _fecha.isAct(partido.getFechaAcaba()) %}
                     <td style="color: red">El partido no se ha jugado todavía</td>

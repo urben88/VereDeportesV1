@@ -5,7 +5,14 @@
 {% block styles %}
 {{ parent() }}
 <link rel="stylesheet" href="{{ asset('css/formularios/reserva/form.css') }}">
-
+<style>
+    .nombre{
+        cursor: pointer;
+    }
+    .nombre:hover{
+        color: blue;
+    }
+</style>
 {% endblock %}
  
 {% block header %}
@@ -29,6 +36,7 @@
                 <th>Campo</th>
                 <th>Profesor</th>
                 {# <th>Fecha creación</th> #}
+                <th>Ver tiempo</th>
                 <th>Fecha Reserva</th>
                 <th>Fecha caduca</th>
               
@@ -40,6 +48,7 @@
                     <td>{{ reserva.getIdCampo().nombre}}</td>
                     <td>{{ reserva.getIdProfesor().email }}</td>
                     {# <td>{{ reserva.getFechaCreacion().format('Y-m-d H:i:s') }}</td> #}
+                    <td onclick="ir(event)" value="{{ reserva.getId() }}" class="nombre">Ver</td>
                     <td>{{ reserva.getFecha().format('Y-m-d H:i:s') }}</td>
                     <td>{{ reserva.getFechaCaduca().format('Y-m-d H:i:s') }}</td>
                 </tr>
@@ -55,5 +64,11 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+  function ir(e){
+        let id = e.target.getAttribute('value');
+        window.location.href = "http://127.0.0.1:8000/reserva/showTiempo/"+id;
+    }
+</script>
  <!-- <script src="{{ asset('js/user/solicitarEquipo.js') }}" type="text/javascript"></script> -->
 {% endblock %}

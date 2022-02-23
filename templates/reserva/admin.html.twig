@@ -5,7 +5,14 @@
 {% block styles %}
 {{ parent() }}
 <link rel="stylesheet" href="{{ asset('css/formularios/reserva/form.css') }}">
-
+<style>
+.nombre:hover{
+    color:blue;
+}
+.nombre{
+    cursor:pointer;
+}
+</style>
 {% endblock %}
  
 {% block header %}
@@ -29,6 +36,7 @@
                 <th>Id</th>
                 <th>Campo</th>
                 <th>Profesor</th>
+                <th>Ver tiempo</th>
                 <th>Fecha creación</th>
                 <th>Fecha Reserva</th>
                 <th>Fecha caduca</th>
@@ -42,6 +50,7 @@
                     <th>{{ reserva.id }}</th>
                     <td>{{ reserva.getIdCampo().nombre}}</td>
                     <td>{{ reserva.getIdProfesor().nombre }}</td>
+                    <td onclick="irtiempo(event)" value="{{ reserva.getId() }}" class="nombre">Ver</td>
                     <td>{{ reserva.getFechaCreacion().format('Y-m-d H:i:s') }}</td>
                     <td>{{ reserva.getFecha().format('Y-m-d H:i:s') }}</td>
                     <td>{{ reserva.getFechaCaduca().format('Y-m-d H:i:s') }}</td>
@@ -57,7 +66,9 @@
             <h1 class="h3 me-4">Cambiar vigilancia:</h1>
             <select id="reserva" style="max-width:200px">
             {% for reserva in reservas %}
-                <option value="{{ reserva.id }}">{{ reserva.id }}</option>
+            {% if _fecha.isAct(reserva.getFecha()) %}
+              <option value="{{ reserva.id }}">{{ reserva.id }}</option>
+            {% endif %}
             {% endfor %}
             </select>
             <select id="profesor">
@@ -92,6 +103,10 @@
                 console.log(idprofesor)
                 window.location.href = "http://127.0.0.1:8000/reserva/changeVigilancia/"+idreserva+'/'+idprofesor ;
             }
+             function irtiempo(e){
+                    let id = e.target.getAttribute('value');
+                    window.location.href = "http://127.0.0.1:8000/reserva/showTiempo/"+id;
+                }
         </script>
         {% endif %}
     

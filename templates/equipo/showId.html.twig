@@ -68,6 +68,7 @@
                 <th>Campo</th>
                 <th>Profesor</th>
                 {# <th>Fecha creación</th> #}
+                <th>Ver Tiempo</th>
                 <th>Fecha Reserva</th>
                 <th>Fecha caduca</th>
             </thead>
@@ -80,6 +81,7 @@
                     <td>{{ reserva.getIdCampo().nombre}}</td>
                     <td>{{ reserva.getIdProfesor().nombre }}</td>
                     {# <td>{{ reserva.getFechaCreacion().format('Y-m-d H:i:s') }}</td> #}
+                    <td onclick="irtiempo(event)" value="{{ reserva.getId() }}" class="nombre">Ver</td>
                     <td>{{ reserva.getFecha().format('Y-m-d H:i:s') }}</td>
                     <td>{{ reserva.getFechaCaduca().format('Y-m-d H:i:s') }}</td>
                 </tr>
@@ -100,6 +102,7 @@
             
       <table class="table table-dark my-3">
         <thead>
+            <th>Liga</th>
             <th>Local</th>
             <th>Visitante</th>
             <th>Resul Local</th>
@@ -112,6 +115,7 @@
         <tbody>
         {% for partido in partidos %}
             <tr>
+                <th>{{partido.getIdLiga().getNombreLiga()}}</th>
                 {% if partido.equipo1 == equipo.id %}
                  <td class="nombre" style="color:orange" onclick="ir(event)" value="{{ partido.equipo1 }}">{{ligarepository.getEquipo(partido.equipo1).nombre}}</td>
                 {% else %}
@@ -169,6 +173,10 @@
         let id = e.target.getAttribute('value');
         window.location.href = "http://127.0.0.1:8000/equipo/showEquipo/"+id;
 
+    }
+    function irtiempo(e){
+        let id = e.target.getAttribute('value');
+        window.location.href = "http://127.0.0.1:8000/reserva/showTiempo/"+id;
     }
 
 </script>
