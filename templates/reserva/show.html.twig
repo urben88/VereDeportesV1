@@ -12,6 +12,7 @@
         color: blue;
     }
 </style>
+
 <table class="table table-dark my-3">
 
     <thead>
@@ -33,7 +34,14 @@
             <td onclick="irtiempo(event)" value="{{ reserva.getId() }}" class="nombre">Ver</td>
             <td>{{ reserva.getFecha().format('Y-m-d H:i:s') }}</td>
             <td>{{ reserva.getFechaCaduca().format('Y-m-d H:i:s') }}</td>
-            <td> <button onclick="cancelar(event)" value="{{ reserva.id }}" class="btn btn-danger" >Cancelar</button></td>
+            
+            {% if _fecha.in24(reserva.getFecha())%}
+             <td style="color:red">No puedes cancelar antes de 24h</td>      
+             {% else %}
+             <td> <button onclick="cancelar(event)" value="{{ reserva.id }}" class="btn btn-danger" >Cancelar</button></td> 
+            {% endif %}  
+            
+           
         </tr>
     {% endif %}
     

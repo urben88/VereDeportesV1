@@ -18,8 +18,9 @@
 
 <div class="container">
     <h1 class="h1 text-center mt-4">Estas en añadir resultados de tus Partidos</h1>
-
-    <table class="table table-dark">
+    {% if partidos|length != 0 %}
+    
+     <table class="table table-dark">
         <legend>Partidos</legend>
         <thead>
             <th>Nombre de la liga</th>
@@ -72,7 +73,7 @@
                 {% if _fecha.isAct(partido.getFechaAcaba()) %}
                     <td style="color: red">El partido no se ha jugado todavía</td>
                 {% else %}
-                    <td><div onclick="putResult(event)" value="{{ partido.id }}" class="btn btn-primary" style="background-color: orange; border: none;"><i class="fa-solid fa-pen"></i></div> </td> 
+                    <td><div class="btn btn-primary" style="background-color: orange; border: none;"><i class="fa-solid fa-pen"></i></div> </td> 
                 {% endif %}
                 
                 
@@ -80,29 +81,45 @@
           {% endfor %}
         </tbody>
     </table>
-  
-</div>
-   {% for message in app.flashes('error') %}
+    
+    {% else %}
+        <div class="alert alert-primary">* No eres el responsable de ningún partido</div>
+    {% endif %}
+
+     {% for message in app.flashes('error') %}
         <div class="alert alert-danger">* {{ message }}</div>
     {% endfor %}
+     {% for message in app.flashes('exito') %}
+        <div class="alert alert-success">* {{ message }}</div>
+    {% endfor %}
+   
+  
+</div>
+  
 {% endblock %}
 
 {% block scripts %}
+
    <script>
-  function putResult(e){
-      // e.preventDefault(); 
-      var id = e.target.getAttribute('value');
-      var local = $('#local'+id).val();
-      var visitante = $('#visitante'+id).val();
-      if(!local){
-          local = 'null';
-      }
-       if(!visitante){
-          visitante = 'null';
-      }
-      console.log(local,visitante,id);
-     // window.location.href = "http://127.0.0.1:8000/ligas/changeResultados/"+id+"/"+local+"/"+visitante;
-  }
+
+
+ 
+ function putResult(){
+     var id = $(this).parent().parent().attr('id');
+     var local = $('#local'+id).val();
+     var visitante = $('#visitante'+id).val();
+     if(local == '' || visitante == ''){
+         local="null"
+         visitante="null"
+     }
+    console.log(id,local,visitante);
+    window.location.href = "http://127.0.0.1:8000/ligas/changeResultados/"+id+"/"+local+"/"+visitante; 
+  
+  } 
+  $(".btn").click(putResult);
+
+ 
+  
 
  </script>
 {% endblock %}

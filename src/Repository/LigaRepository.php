@@ -228,6 +228,59 @@ class LigaRepository extends ServiceEntityRepository
         $equipo = $this->_em->getRepository(Equipo::class)->find($id);
         return $equipo;
     }
+    
+    public function doranking($idliga){
+        $liga = $this->_em->getRepository(Liga::class)->find($idliga);
+        $equipos = $liga->getEquipos();
+        $partidos = $liga->getPartidos();
+        foreach ($equipos as $key => $equipo) {
+            $puntos[$equipo->getId()] = [$equipo->getNombre(),0];
+        }
+        
+        //? Saber que si no se ha jugado ninguno
+        $puntuados = 0;
+        foreach ($partidos as $partido) {
+            if($partido->getResulEquipo1() != null || $partido->getResulEquipo2() != null){
+                $local = $partido->getResulEquipo1();
+                $visitante = $partido->getResulEquipo2();
+                $localid = $partido->getEquipo1();
+                $visitanteid = $partido->getEquipo2();
+                if($local > $visitante){
+                    $puntos[$localid][1] += 2;
+                }else if($local < $visitante){
+                    $puntos[$visitanteid][1] += 2;
+                }else{
+                    $puntos[$localid][1] += 1;
+                    $puntos[$visitanteid][1] += 1;
+                }
+                $puntuados++;
+            }
+        }
+        if($puntuados == 0){
+            return [false,$puntos];
+        }
+
+        $datos = [];
+
+        foreach ($puntos as $key => $value) {
+            $datos[] = [$value[1],$value[0]];
+        }
+        rsort($datos);
+        // $this->array_sort_by($puntos,'')
+        return [true,$puntos,$datos];
+
+
+    }
+    function array_sort_by(&$arrIni, $col, $order = SORT_ASC)
+    {
+        $arrAux = array();
+        foreach ($arrIni as $key=> $row)
+        {
+            $arrAux[$key] = is_object($row) ? $arrAux[$key] = $row->$col : $row[$col];
+            $arrAux[$key] = strtolower($arrAux[$key]);
+        }
+        array_multisort($arrAux, $order, $arrIni);
+    }
 
 
 

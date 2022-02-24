@@ -6,6 +6,7 @@ use App\Entity\Equipo;
 use App\Entity\Solicita;
 use App\Entity\User;
 use App\Form\SolicitaType;
+use App\Form\UserType;
 use App\Service\FechasService;
 use App\Service\NavService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,10 +14,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
   /**
-     * @Route("/user")
+  * @Route("/user")
   */
 class UserController extends AbstractController
 {
@@ -142,6 +143,39 @@ class UserController extends AbstractController
         $this->em->flush();
         $this->addFlash('exito','Se ha aceptado la solicitud');
         return $this->redirectToRoute('controlSolicitud');
+    }
+
+    /**
+     * @Route("/registeradmin", name="registeradmin")
+     */
+    public function registeradmin(Request $request, UserPasswordEncoderInterface  $passwordEncoder)
+    {
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+        $user = new User();
+        $form = $this->createForm(UserType::class,$user);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            if($form['Repeat_password']->getData() != $form['password']->getData()){
+                $this->addFlash('error','Las constraseñas no son iguales');
+            }else{
+                // if($form['admin']->)
+                $user->setRoles(['ROLE_ADMIN']);
+                $user->setCapitan(0);
+                $user->setPassword($passwordEncoder->encodePassword($user,$form['password']->getData()));
+                $this->em->persist($user);
+                $this->em->flush();
+                $this->addFlash('exito','Se ha registrado exitósamente el nuevo admin');
+            }
+           
+        }
+
+        return $this->render('login/registeradmin.html.twig',[
+            'controller_name' => 'ReservaController',
+            'email'=>$this->nav->getDataNav()['email'],
+            'admin'=>$this->nav->getDataNav()['admin'],
+            'controller_name' => 'LoginController',
+            'formulario'=> $form->createView()
+        ]);
     }
 
    

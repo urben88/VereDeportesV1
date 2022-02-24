@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Solicita;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,6 +20,15 @@ class SolicitaRepository extends ServiceEntityRepository
         parent::__construct($registry, Solicita::class);
     }
 
+    public function removeAllSolicita(User $user){
+        $solicitudes  = $user->getSolicitas();
+        foreach ($solicitudes as $key => $solicita) {
+            $user->removeSolicita($solicita);
+        }
+        $this->_em->persist($user);
+        $this->_em->flush();
+
+    }
     // /**
     //  * @return Solicita[] Returns an array of Solicita objects
     //  */

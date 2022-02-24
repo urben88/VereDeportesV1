@@ -34,6 +34,36 @@
 
     </div>
     
+    <h1 class="my-4" >Ranking<span class="h5 text-muted">(Ganados suman 2 pnt y en caso de empate 1 pnt)<span></h1>
+    {% if ligarepository.doranking(liga)[0] %}
+     
+    <div class="list-group mb-4">
+     
+        {% for equipo in ligarepository.doranking(liga)[2] %}
+        
+
+        {# <a href="#" class="list-group-item list-group-item-action active">
+            Cras justo odio
+        </a> #}
+           {# <h2>Entra</h2> #}
+        {% if loop.index == 1 %}
+        <a href="#" class="list-group-item list-group-item-action active bg-primary"><span>#{{ loop.index }}  </span>{{ equipo[1] }}<br>Puntos: <span style="color:yellow">{{ equipo[0] }}</span></a>
+        {% else %}
+         <a href="#" class="list-group-item list-group-item-action"><span>#{{ loop.index }}  </span>{{ equipo[1] }}<br>Puntos: <span class="text-success">{{ equipo[0] }}</span></a>
+        {% endif %}
+        
+        {% endfor %}
+      
+   
+    </div>
+    {% else %}
+    <div class="alert alert-primary">No se ha jugado ningun partido</div>
+    {% endif %}
+     {# <p>{{ print_r(ligarepository.doranking(liga)[2])}}</p>   #}
+   
+
+
+
     <table class="table table-dark">
         <legend>Partidos de la liga</legend>
         <thead>

@@ -42,7 +42,6 @@ class ReservaController extends AbstractController
         $reserva = new Reserva();
         $form = $this->createForm(ReservaType::class,$reserva);
         $form->handleRequest($request);
-
         $resevasSemana = 0;
       
         if($form->isSubmitted() && $form->isValid()){
@@ -78,7 +77,7 @@ class ReservaController extends AbstractController
                                 $this->addFlash('error',"No puedes crear una reserva un fin de semana");
                             }
                         }else{
-                                $this->addFlash('error',"Ya existe una reserva para esa hora y campo");
+                                $this->addFlash('error',"Ya existe una reserva para esa hora y campo, o ya tienes una reserva en otro campo a la misma hora");
                         }
                     }else{
                         $this->addFlash('error',"No puedes hacer una reserva en el pasado");

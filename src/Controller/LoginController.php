@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Form\UserType;
 //TODO Entidades
 use App\Entity\User;
-
+use App\Service\NavService;
 //Obtener respuesta
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,9 +23,11 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class LoginController extends AbstractController
 {
+
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
+      
     }
     
     /**
@@ -40,6 +42,7 @@ class LoginController extends AbstractController
             if($form['Repeat_password']->getData() != $form['password']->getData()){
                 $this->addFlash('error','Las constraseñas no son iguales');
             }else{
+                // if($form['admin']->)
                 $user->setRoles(['ROLE_USER']);
                 $user->setCapitan(0);
                 $user->setPassword($passwordEncoder->encodePassword($user,$form['password']->getData()));

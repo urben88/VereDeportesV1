@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ver liga{% endblock %}
+
+{% block styles %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('css/register/formulario.css') }}">
+<link rel="stylesheet" href="{{ asset('css/formularios/liga/form.css') }}">
+<style>
+.nombre:hover{
+    color:blue;
+}
+.nombre{
+    cursor:pointer;
+}
+</style>
+{% endblock %}
+ 
+{% block header %}
+   {{ include("componentes/nav.html.twig") }}
+{% endblock %}
+
+
+{% block body %}
+
+  <h1 class="text-center mt-5">Registrar un nuevo profesor</h1>
+    {{ form(formulario) }}
+    <div class="text-center mt-2">
+        {# <a href="{{ path('app_login') }}" class="text-center">Ya tienes cuenta?</a>
+        <a href="{{ path('home') }}" class="ms-3 mt-4">Ir home</a> #}
+    </div>
+    
+    {% for message in app.flashes('exito') %}
+        <div class="alert alert-success">
+        {{ message }}
+        </div>
+    {% endfor %}
+      {% for message in app.flashes('error') %}
+        <div class="alert alert-warning">
+        {{ message }}
+        </div>
+    {% endfor %}
+
+{% endblock %}
+
+{% block scripts %}
+
+
+{% endblock %}

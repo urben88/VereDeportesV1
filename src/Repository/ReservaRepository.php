@@ -24,16 +24,23 @@ class ReservaRepository extends ServiceEntityRepository
 
     //! Falta hacer comprobación de intervalo de tiempo Solo da respeusta si coincide exactamente
     public function isValida(\DateTime $reservadada, \DateTime $fechacaduca, Campo $campo){
-        $reservas = $this->_em->getRepository(Reserva::class)->findBy(["id_campo"=>$campo->getId()]);
-        
-        foreach( $reservas as $reserva){
-            if( 
-            ($reservadada >= $reserva->getFecha() && $reservadada <= $reserva->getFechaCaduca())
-            || ($fechacaduca >= $reserva->getFecha() && $fechacaduca <= $reserva->getFechaCaduca())
-            ){
-                return false;
+        // $reservas = $this->_em->getRepository(Reserva::class)->findBy(["id_campo"=>$campo->getId()]);
+        $campos = $this->_em->getRepository(Campo::class)->findBy(['deporte'=>$campo->getDeporte()]);
+        $reservaas = [];
+        foreach ($campos as $key => $campo) {
+            $reservaas[]= $this->_em->getRepository(Reserva::class)->findBy(["id_campo"=>$campo->getId()]);
+        }
+        foreach ($reservaas as $reservas) {
+            foreach( $reservas as $reserva){
+                if( 
+                ($reservadada >= $reserva->getFecha() && $reservadada <= $reserva->getFechaCaduca())
+                || ($fechacaduca >= $reserva->getFecha() && $fechacaduca <= $reserva->getFechaCaduca())
+                ){
+                    return false;
+                }
             }
         }
+      
         return true;
        
     }

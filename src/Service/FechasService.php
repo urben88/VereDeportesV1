@@ -7,6 +7,7 @@ use App\Entity\Equipo;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use SebastianBergmann\Environment\Console;
 use Symfony\Component\Security\Core\Security;
 
 class FechasService
@@ -32,6 +33,23 @@ class FechasService
         return $sumar->modify("+90 minute");
 
     }
+    
+    function in24(DateTime $fecha){
+        $menos24 = clone $fecha;
+        $menos24->modify('-24 hours');
+        // echo $fecha->format("Y-m-d H:i:s")."<br>";
+        // echo $menos24->format("Y-m-d H:i:s")."<br>";
+        $act = new DateTime();
+        //echo $act->format("Y-m-d H:i:s")."<br>";
+
+        // if($this->inInterval($act,$menos24,$fecha)){
+        //     echo "Esta en intervalo";
+        // }else{
+        //     echo "No esta en intervalo";
+        // }
+        return $this->inInterval($act,$menos24,$fecha);
+    }
+    
     public function isSemana(\DateTime $fechapartido){
 
          $finde = ["Sat","Sun"];
@@ -64,13 +82,13 @@ class FechasService
      }
      
      function inInterval(Datetime $fecha, Datetime $inicio, Datetime $fin){
-        if($fecha > $inicio && $fecha < $fin)
+        if($fecha >= $inicio && $fecha <= $fin)
         {
             return true;
         }else{
             return false;
         }
-      }
+      }    
 
     function nextSaturday(DateTime $fecha){
         $arraydias = ["Mon"=>5,"Tue"=>4,"Wed"=>3,"Thu"=>2,"Fri"=>1,"Sat"=>0,"Sun"=>6];

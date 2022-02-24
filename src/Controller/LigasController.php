@@ -217,18 +217,23 @@ class LigasController extends AbstractController
         ]);
     }
     /**
-     * @Route("changeResultados/{id}/{local}/{visitante}",name="changeResultados")
+     * @Route("/changeResultados/{id}/{local}/{visitante}",name="changeResultados")
      */
     public function changeResultados($id,$local,$visitante){
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $partido = $this->em->getRepository(Partido::class)->find($id);
         if($local != 'null' && $visitante != 'null'){
+            if($partido->getResulEquipo1() != null){
+                $this->addFlash('exito',"Se ha modificado un resultado anteriormente puntuado con: local=".$partido->getResulEquipo1()." visitante=".$partido->getResulEquipo2()); 
+            }else{
+                $this->addFlash('exito',"Se ha añadido el nuevo resultado"); 
+            }
             $partido->setResulEquipo1($local);
             $partido->setResulEquipo2($visitante);
             $this->em->persist($partido);
             $this->em->flush();
         }else{
-            $this->addFlash('error',"Uno de los resultados es null o undefined");
+            $this->addFlash('error',"Uno o las dos puntuaciones estan vacias");
         }
         return $this->redirectToRoute('setResultados');
         

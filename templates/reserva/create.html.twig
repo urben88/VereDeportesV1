@@ -23,7 +23,7 @@
     {% endfor %} 
     <div class="campos d-flex flex-row gap-3">
     {# <h1>Campos:</h1> #}
-        {% for campo in campos %}
+        {% for campo in campos|sort %}
         {% if campo.deporte == app.user.equipo.deporte %}
          <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="{{ asset("img/"~ campo.deporte ~".jpg")}}" alt="Card image cap">
